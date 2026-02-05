@@ -1,51 +1,43 @@
 ---
-title: "Customizing the Home Page"
-description: "Learn how to modify the landing page, add/remove components, and edit the hero content."
+title: "Landing Page Control"
+description: "Customizing the monochromatic home page and modular components."
 project: "astrodex-base"
 version: "v1.0.1"
 status: "stable"
 order: 6
 ---
 
-# Customizing the Home Page
+# Landing Page Control
 
-The Astrodex landing page is fully modular. It is built using isolated Astro components located in `src/components/home/`.
+The Astrodex home page is a modular composition of Astro components designed for high-conversion technical branding.
 
-## 1. Modifying the Hero
+## Section Orchestration
 
-The main entry point is `src/components/home/Hero.astro`. 
-- **Text:** Edit the H1 and P tags to change your headline.
-- **CTA:** Update the `href` of the buttons to point to your repository or documentation.
-
-## 2. Managing Page Sections
-
-Open `src/pages/index.astro` to see the layout of the home page. You can easily reorder or disable sections by commenting out their component calls:
+The layout is defined in `src/pages/index.astro`. You can modify the order or visibility of sections by manipulating the component calls:
 
 ```astro
-<!-- src/pages/index.astro -->
 <Layout title="...">
-	<Hero />
-    <TechStack /> <!-- Disable this to hide the logo bar -->
-    <ProjectsShowcase featuredProjects={featuredProjects} />
-	<Features />
-    <Workflow />
-    <FAQ />
-    <Stats ... />
+    <Hero />
+    <TechStack /> <!-- The logo marquee -->
+    <ProjectsShowcase /> <!-- Featured documentation cards -->
+    <Features /> <!-- Core engine value-props -->
+    <Workflow /> <!-- Deployment terminal -->
+    <FAQ /> <!-- Common technical queries -->
+    <Stats /> <!-- Performance metrics -->
 </Layout>
 ```
 
-## 3. Editing Components
+## Component Customization
 
-Each section has its own file for easy editing:
-- **TechStack:** `src/components/home/TechStack.astro` (Edit the `tech` array).
-- **Features:** `src/components/home/Features.astro` (Modify the feature grid).
-- **FAQ:** `src/components/home/FAQ.astro` (Edit the `faqs` constant).
-- **Stats:** `src/components/home/Stats.astro` (Adjust the project metrics).
+Each module is located in `src/components/home/`:
+- **Hero:** Edit `Hero.astro` to change the H1 headline and CTA links.
+- **FAQ:** Modify the `faqs` array in `FAQ.astro` to update questions.
+- **Workflow:** Edit the terminal commands and status messages in `Workflow.astro`.
 
-## 4. Branding & Colors
+## Visual Variables
 
-The home page inherits all styles from `src/styles/global.css`. By changing the `@theme` variables, you can transform the look of all home page components instantly.
+The landing page follows the global theme defined in `src/styles/global.css`. To change the site's accent color (e.g., from Silver to Emerald), simply update the `--color-primary-500` variable.
 
 ---
 
-> **Advanced:** Since these are standard Astro components, you can add your own React, Vue, or Svelte components anywhere on the home page!
+> **Custom Components:** Because Astrodex is built on Astro, you can drop any React or Vue component directly into these layouts if you need complex interactivity.

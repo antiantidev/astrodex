@@ -1,6 +1,6 @@
 ---
 title: "Setup & Deployment"
-description: "A step-by-step guide to installing, configuring, and deploying your own documentation hub."
+description: "Bootstrapping your Astrodex hub: from local installation to global edge deployment."
 project: "astrodex-base"
 version: "v1.0.1"
 status: "stable"
@@ -9,66 +9,64 @@ order: 1
 
 # Setup & Deployment
 
-Launching your own premium documentation hub is simple. Follow these steps to get the Astrodex engine running locally and on the web.
+Initializing your professional documentation hub takes less than 60 seconds. Follow this technical pipeline to get started.
 
-## 1. Get the Code
+## 1. Environment Bootstrap
 
-The fastest way to start is by using the **GitHub Template** feature.
+The most efficient way to start is by utilizing the GitHub Template.
 
-1.  Visit the [Astrodex Repository](https://github.com/antiantidev/astrodex).
-2.  Click the **"Use this template"** button.
-3.  Clone your new repository to your local machine:
+1.  Initialize your repository via the [Astrodex Template](https://github.com/antiantidev/astrodex).
+2.  Clone your instance locally:
     ```bash
-    git clone https://github.com/YOUR_USERNAME/your-docs-repo.git
-    cd your-docs-repo
+    git clone https://github.com/YOUR_USER/your-docs.git
+    cd your-docs
     ```
 
-## 2. Local Installation
+## 2. Dependency Injection
 
-Install the required dependencies using NPM:
+Astrodex requires Node.js 20+. Install the core engine dependencies:
 
 ```bash
 npm install
 ```
 
-## 3. Development Server
+## 3. Development Runtime
 
-Start the engine in development mode to see changes in real-time:
+Launch the local development server with HMR (Hot Module Replacement):
 
 ```bash
 npm run dev
 ```
-Open your browser to `http://localhost:4321`.
+The engine will be accessible at `http://localhost:4321`.
 
-## 4. Initial Configuration
+## 4. Global Configuration
 
-All global branding is centralized in `src/site.config.ts`. Open this file to update:
-- **Brand Name:** Your site's primary title.
-- **Logo Text:** The letter or icon text in the header logo.
-- **Social Links:** Your GitHub and Twitter profiles.
+Centralized branding is managed in `src/site.config.ts`. Update this file to define your hub's identity:
 
-## 5. Visual Customization
-
-To change the colors or typography, modify the `@theme` block in `src/styles/global.css`.
-
-```css
-@theme {
-  --color-primary-500: #ffffff; /* Main Accent */
-  --color-midnight: #000000;    /* Background */
-}
+```typescript
+export const SITE_CONFIG = {
+  brand: {
+    name: "Your Brand",
+    description: "Your elite technical hub",
+    // ...
+  }
+};
 ```
 
-## 6. Deployment
+## 5. Theme Orchestration
 
-Astrodex generates a purely static site, making it compatible with any modern web host for **Zero Cost**.
+Modify the `@theme` layer in `src/styles/global.css` to adjust the monochromatic palette or primary accents.
 
-### Vercel (Recommended)
-1.  Connect your GitHub repo to Vercel.
-2.  Vercel will automatically detect **Astro** and deploy your site.
+## 6. Deployment Pipeline
 
-### GitHub Pages
-We include a GitHub Action workflow to deploy automatically on every push. See `.github/workflows/deploy.yml`.
+Since Astrodex generates a 100% static build, it can be hosted on any edge network for **zero cost**.
+
+### GitHub Pages (Automated)
+We provide a pre-configured CI/CD workflow. Simply enable **GitHub Actions** in your settings, and every push to `main` will trigger a global deployment.
+
+### Vercel / Netlify
+Connect your repository and ensure the build command is `npm run build` and the output directory is `dist/`.
 
 ---
 
-> **Next Step:** Learn how to organize your documentation files in the [Project Structure](/docs/astrodex-base/v1.0.1/getting-started/structure) guide.
+> **Next Phase:** Master the [Project Structure](/docs/astrodex-base/v1.0.1/getting-started/structure/) to organize your content efficiently.

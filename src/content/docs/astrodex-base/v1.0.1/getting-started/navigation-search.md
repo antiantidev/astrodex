@@ -1,43 +1,40 @@
 ---
-title: "Navigation & Search"
-description: "Master the discovery tools in Astrodex: Sidebar filtering, collapsible groups, and the global command palette."
+title: "Navigation & Discovery"
+description: "Utilizing the advanced discovery tools in Astrodex: Sidebar filtering, command palette, and stateful navigation."
 project: "astrodex-base"
 version: "v1.0.1"
 status: "stable"
 order: 3
 ---
 
-# Navigation & Search
+# Navigation & Discovery
 
-Astrodex is built to handle massive documentation sets. We provide several tools to help users find exactly what they need instantly.
+Astrodex is engineered for massive data sets. We provide elite discovery tools to ensure developers can locate specific technical details in milliseconds.
 
-## 1. Sidebar Filtering 🔍
+## 1. Stateful Sidebar 📂
 
-Located at the top of the left sidebar, the filter allows you to search for articles by title in real-time.
+The sidebar is the primary navigation matrix. It features:
+- **Folder Grouping:** Automatic hierarchical categorization.
+- **Collapsible States:** Toggle groups to save vertical space.
+- **Persistence:** The engine remembers which groups you've opened across page reloads.
 
-- **Dynamic Search:** As you type, the sidebar hides irrelevant items.
-- **Smart Expansion:** Folder groups containing a match will automatically expand.
-- **Reset:** Clearing the input restores the sidebar to its original state.
+## 2. Real-time Filtering 🔍
 
-## 2. Collapsible Folder Groups 📂
+Located at the apex of the sidebar, the filter allows for instant UI refinement.
+- **Instant Search:** Hides irrelevant articles as you type.
+- **Auto-Expansion:** Automatically opens collapsed groups if they contain a match.
 
-Articles are grouped by their file system directory.
+## 3. Global Command Palette (`Ctrl + K`)
 
-- **Manual Toggle:** Click any group header to expand or collapse it.
-- **Persistence:** The sidebar remembers your choices. If you close a group, it stays closed when you refresh or switch pages.
-- **Auto-Focus:** The system ensures the group containing your current page is always expanded so you never feel lost.
+For site-wide intelligence, the Command Palette searches across all projects and versions.
+- **Pre-indexed:** The search index is built at compile-time for zero-latency results.
+- **Full-Text Search:** Scans titles, descriptions, and content bodies.
 
-## 3. Global Command Palette ⌨️
+## 4. Contextual Breadcrumbs 🗺️
 
-For a site-wide search across all projects, press **`Ctrl+K`** or click the **Search** icon in the header.
-
-- **Fast Indexing:** The search index is pre-generated during build-time for instant results.
-- **Filtering:** You can filter search results by project or version within the modal.
-
-## 4. Breadcrumbs 🗺️
-
-Every page features responsive breadcrumbs (e.g., `Home / Project / v1.0 / Topic`). This provides clear context and allows for quick upward navigation.
+Every article includes semantic breadcrumbs for rapid upward traversal:
+`Home / Ecosystem / Project Name / Version / Current Topic`
 
 ---
 
-> **Design Choice:** All navigation logic is highly optimized. We use minimal client-side JavaScript to ensure the fastest possible page transitions.
+> **Performance Note:** Navigation utilizes the "Astro View Transitions" API (where enabled) to provide app-like fluidity while maintaining the stability of a static site.

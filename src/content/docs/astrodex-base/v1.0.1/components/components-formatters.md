@@ -1,63 +1,56 @@
 ---
-title: "Interactive Components"
-description: "A guide to the rich UI components and Markdown extensions available in the Astrodex engine."
+title: "Technical Formatters"
+description: "Enhancing Markdown with Admonitions, Mermaid diagrams, and premium code blocks."
 project: "astrodex-base"
 version: "v1.0.1"
 status: "stable"
 order: 7
 ---
 
-# Interactive Components
+# Technical Formatters
 
-Astrodex enhances standard Markdown with several built-in formatters and components to make your documentation more professional and visually engaging.
+Astrodex extends standard Markdown with several specialized formatters to provide a premium technical reading experience.
 
 ## 1. Admonitions (Callouts)
 
-Highlight important information using our custom notice blocks.
+Highlight critical information using semantic notice blocks.
 
-> **Note:** Helpful tips or supplemental information.
+> **Note:** Supplemental information or helpful tips.
 
-> **Warning:** Cautionary advice to prevent minor issues.
+> **Warning:** Cautionary advice to prevent configuration errors.
 
-> **Danger:** Critical warnings regarding data loss or security.
+> **Danger:** Critical alerts regarding breaking changes or security risks.
 
-### Syntax:
-Simply start a line with the keyword in a blockquote:
+**Syntax:**
 ```markdown
-> Note: Your message.
-> Warning: Your warning.
-> Danger: Your alert.
+> Note: Your message here.
 ```
 
-## 2. Mermaid Diagrams
+## 2. Mermaid Architecture
 
-Visualize architecture, state machines, or sequences natively.
+Visualize systems and workflows directly in your docs using Mermaid.js syntax.
 
 ```mermaid
-graph LR;
-    A[Setup] --> B[Configure];
-    B --> C[Deploy];
-    C --> D{Success?};
-    D -->|Yes| E[Live Site];
-    D -->|No| B;
+graph TD;
+    A[Markdown] --> B[Astro Engine];
+    B --> C[Static HTML];
+    C --> D[Edge CDN];
 ```
 
-### Syntax:
-Use the `mermaid` language tag in a code block.
+**Syntax:**
+Use the `mermaid` language tag in a standard code block.
 
 ## 3. Premium Code Blocks
 
-Our code engine includes:
-- **Shiki Highlighting:** Professional-grade syntax coloring.
-- **Copy Button:** One-click clipboard copy on all snippets.
-- **Title Support:** (Optional) Add filenames to your blocks.
+The engine utilizes **Shiki** for syntax highlighting, providing IDE-grade coloring for over 100 languages.
+- **Copy to Clipboard:** Every code block features a persistent copy button.
+- **Trailing Slash Support:** Optimized for clean URL structures.
 
-## 4. Image Lightbox
+## 4. Intelligent Image Handling
 
-All images in your documentation are automatically enhanced:
-- **Medium Zoom:** Click any image to expand it into a focused lightbox.
-- **Optimized Assets:** Powered by `astro:assets` for maximum performance.
+- **Automatic Optimization:** Images are processed via `astro:assets` for WebP conversion and lazy loading.
+- **Lightbox Zoom:** Powered by `medium-zoom`, any image in the prose can be clicked to enter a focused lightbox view.
 
 ---
 
-> **Did you know?** Astrodex supports **MDX**. This means you can import and use any Astro component directly inside your `.mdx` articles!
+> **Did you know?** Astrodex supports **MDX**, allowing you to import interactive Astro components directly into your documentation files.

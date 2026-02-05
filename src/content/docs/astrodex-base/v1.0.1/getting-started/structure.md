@@ -1,51 +1,48 @@
 ---
-title: "Project Structure"
-description: "How to organize projects, versions, and sub-folders within the Astrodex directory hierarchy."
+title: "Project Architecture"
+description: "Understanding the folder-based routing and content organization of the Astrodex engine."
 project: "astrodex-base"
 version: "v1.0.1"
 status: "stable"
 order: 2
 ---
 
-# Project Structure
+# Project Architecture
 
-Astrodex is designed for scalability. It uses a strict directory hierarchy to automatically generate URLs, sidebars, and version switchers without manual configuration.
+Astrodex uses a **Filesystem-as-API** approach. Your folder structure directly dictates the routing, sidebar grouping, and versioning of your documentation hub.
 
-## The Content Directory
+## Directory Hierarchy
 
-All your documentation lives in `src/content/docs/`. The system expects this pattern:
+All documentation assets are located in `src/content/docs/`. The engine parses this directory using the following logic:
 
 ```text
 src/content/docs/
-├── [project-id]/               <-- e.g., 'auth-api'
-│   ├── project.metadata.md     <-- Global project info
-│   └── [version]/              <-- e.g., 'v1.0'
-│       ├── introduction.md     <-- Default landing page
-│       └── [group-name]/       <-- e.g., 'getting-started'
-│           ├── setup.md
-│           └── config.md
+├── [project-id]/               <-- Kebab-case project ID
+│   ├── project.metadata.md     <-- Root identity file
+│   └── [version]/              <-- e.g., 'v1.0', 'v2.0'
+│       ├── introduction.md     <-- Version landing page
+│       └── [category]/         <-- Sidebar grouping
+│           └── article.md      <-- Technical content
 ```
 
-### 1. Project ID (The Hub Level)
-The folder name at the root of `docs/` defines the project URL: `/docs/auth-api`.
+### 1. Project Identity
+The top-level folder name (e.g., `astrodex-base`) serves as the unique ID for that project ecosystem. It must be kebab-case.
 
-### 2. Project Metadata
-The `project.metadata.md` file defines the project's display title and description for the main ecosystem gallery. **This file is required for every project.**
+### 2. Versioning Logic
+Any sub-folder within a project that starts with `v` is automatically treated as a version. The engine will:
+- Generate a version-specific route: `/docs/[project]/[version]/`.
+- Include it in the sidebar **Version Switcher**.
+- Index it for version-specific searches.
 
-### 3. Versioning
-Folders starting with `v` (e.g., `v1.0`, `v2.5.1`) are treated as versions. The version switcher in the sidebar will automatically list these folders.
+### 3. Automated Grouping
+Folders inside a version directory (e.g., `getting-started/`) automatically create a collapsible category in the sidebar. The folder name is transformed into a readable title (e.g., `getting-started` → `GETTING STARTED`).
 
-### 4. Folder-based Grouping
-To create a section in the sidebar, simply create a sub-folder inside your version directory.
-- **Example:** `v1.0/routing/pages.md`
-- **Result:** A sidebar category named **ROUTING** containing the **Pages** link.
+## Content Sorting
 
-## Sidebar Sorting
-
-The order of items in the sidebar is controlled by the `order` field in each file's frontmatter.
-- Lower numbers appear at the top.
-- If no `order` is provided, items are sorted alphabetically.
+Sidebar order is determined by the `order` field in the Markdown frontmatter:
+- **Priority:** Lower numbers (0, 1, 2) appear first.
+- **Fallback:** If `order` is missing, alphabetical sorting is applied.
 
 ---
 
-> **Tip:** Keep your project IDs in kebab-case (`my-awesome-tool`) for clean, SEO-friendly URLs.
+> **Technical Tip:** Keep your filenames lowercase and use hyphens for SEO-friendly URL slugs.

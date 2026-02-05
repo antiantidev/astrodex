@@ -1,22 +1,25 @@
 ---
-title: "Astrodex Manual"
+title: "Astrodex Core Documentation"
 project: "astrodex-base"
-description: "The complete technical manual for customizing and deploying the Astrodex documentation starter kit."
+description: "The definitive technical guide for the Astrodex documentation engine. Learn how to architect, deploy, and scale your technical hubs."
 status: "stable"
 version: "v1.0.1"
 contributors:
   - username: "antiantidev"
-    role: "Core Architect"
+    role: "Lead Architect"
 ---
 
-# The Astrodex Manual
+# The Astrodex Protocol
 
-Welcome to the official documentation for the **Astrodex Starter Kit**. This project is not just a demo; it's a living example of how to structure a professional, multi-project documentation ecosystem.
+Welcome to the central intelligence hub for the **Astrodex Engine**. This documentation is designed for developers who demand high performance, monochromatic precision, and absolute technical clarity.
 
-### What you will find here:
-- **Setup Guide:** How to clone, install, and deploy your own instance.
-- **Customization:** How to rebrand the UI, change colors, and modify the home page.
-- **Content Management:** Understanding frontmatter, project metadata, and folder-based grouping.
-- **Interactive Components:** Using Admonitions, Mermaid diagrams, and code blocks.
+### Operational Overview
+This manual covers everything from initial bootstrap to advanced multi-project orchestration. Whether you're hosting a single API reference or a massive enterprise ecosystem, Astrodex provides the infrastructure you need.
 
-> **Tip:** If you are viewing this on the live demo site, you can use the **Sidebar Filter** on the left to quickly jump to specific customization topics.
+### Key Knowledge Areas:
+- **Core Architecture:** Understanding the static-first, zero-JS philosophy.
+- **Ecosystem Management:** Scaling from one project to hundreds within a single hub.
+- **Advanced Formatters:** Utilizing Mermaid, MDX, and premium code blocks.
+- **SEO & Performance:** Maintaining 100/100 Lighthouse scores and global edge distribution.
+
+> **Technical Note:** This project is a "dogfooding" example. Everything you see here—from the sidebar filtering to the version switcher—is powered by the very engine described in these pages.

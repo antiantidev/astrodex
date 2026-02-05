@@ -1,47 +1,47 @@
 ---
-title: "Article Metadata (Frontmatter)"
-description: "A complete reference for mandatory and optional fields in your documentation Markdown files."
+title: "Frontmatter Reference"
+description: "Technical specifications for article metadata and Zod-based validation."
 project: "astrodex-base"
 version: "v1.0.1"
 status: "stable"
 order: 4
 ---
 
-# Article Metadata
+# Frontmatter Reference
 
-Every documentation file must begin with a YAML frontmatter block. This metadata is strictly validated using **Zod** to ensure technical integrity and prevent broken links.
+Every Markdown file in the Astrodex ecosystem must be preceded by a YAML frontmatter block. This data is strictly validated via **Zod** to ensure system integrity.
 
-## Mandatory Configuration
+## Standard Schema
 
-At a minimum, each file requires these three fields:
-
-```markdown
+```yaml
 ---
-title: "Your Page Title"
-project: "your-project-id"
-version: "v1.0.1"
+title: "Technical Title"
+description: "Short SEO description"
+project: "project-id"
+version: "v1.0"
+status: "stable"
+order: 0
 ---
 ```
 
-## Complete Field Reference
+## Field Specifications
 
-| Field | Type | Required | Description |
+| Property | Type | Required | Description |
 | :--- | :--- | :--- | :--- |
-| `title` | String | Yes | The H1 title of the page and browser tab. |
-| `description`| String | No | Used for SEO meta tags and preview snippets. |
-| `project` | String | Yes | Must match the project's root folder name. |
-| `version` | String | Yes | The version folder name (e.g., `v1.0.1`). |
-| `status` | Enum | No | `stable`, `beta`, `alpha`, `deprecated`. |
-| `order` | Number | No | Priority in the sidebar (lower = higher). |
-| `lastUpdated`| Date | No | Displays the last revision date on the page. |
+| `title` | `string` | Yes | The primary H1 and meta-title. |
+| `project` | `string` | Yes | Must match the root folder ID. |
+| `version` | `string` | Yes | Must match the version folder name. |
+| `description`| `string` | No | SEO meta description. |
+| `status` | `enum` | No | `stable`, `beta`, `alpha`, `deprecated`. |
+| `order` | `number` | No | Sidebar sorting priority (default: 0). |
+| `lastUpdated`| `date` | No | Displays revision date on footer. |
 
-## Status Badges
-
-The `status` field renders a premium monochromatic badge next to the title:
-- **stable:** Clean border with a check icon.
-- **beta:** Dotted border indicating testing.
-- **deprecated:** Ghostly text style.
+## Status badges
+The `status` field triggers visual indicators next to the article title:
+- **Stable:** Minimalist border (default).
+- **Beta/Alpha:** Specialized indicators for work-in-progress content.
+- **Deprecated:** Visual warning for legacy documentation.
 
 ---
 
-> **Validation Note:** If your project ID in the frontmatter does not match the folder name, the build will fail. This is intentional to keep your data consistent.
+> **Build Alert:** If the `project` or `version` fields do not match the actual file path, the Astro build process will terminate with a validation error.

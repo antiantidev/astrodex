@@ -1,6 +1,6 @@
 ---
-title: "Project Identity (Metadata)"
-description: "How to define the global identity of your project using the mandatory project.metadata.md file."
+title: "Project Identity"
+description: "Defining global project metadata and the Ecosystem gallery presence."
 project: "astrodex-base"
 version: "v1.0.1"
 status: "stable"
@@ -9,44 +9,40 @@ order: 5
 
 # Project Identity
 
-The `project.metadata.md` file is the central nervous system of a documentation set. It defines how your project appears in the Ecosystem gallery and who is maintaining it.
+The `project.metadata.md` file serves as the manifest for an entire project ecosystem. It controls the project's appearance in the **Ecosystem Gallery** and defines its core contributors.
 
-## File Location
+## Manifest Location
 
-Each project must have exactly one metadata file at its root:
+Each project must contain exactly one metadata manifest at its root:
 `src/content/docs/[project-id]/project.metadata.md`
 
-## The Schema
+## Manifest Schema
 
-The metadata file uses a specialized YAML block:
-
-```markdown
+```yaml
 ---
-title: "Astrodex Core"
-description: "The primary engine documentation."
-project: "astrodex-base"
+title: "Project Full Name"
+project: "project-id"
+description: "Elevator pitch for the project card."
 status: "stable"
 contributors:
-  - username: "antiantidev"
-    role: "Lead Maintainer"
+  - username: "github_user"
+    role: "Maintainer"
 ---
 ```
 
-### Mandatory Fields
+### Attribute Reference
 
-| Field | Description |
-| :--- | :--- |
-| `title` | The full name of the project shown on the home page and hub. |
-| `description` | The teaser text used in the project cards. |
-| `project` | The unique kebab-case ID matching the folder name. |
-| `contributors` | A list of GitHub usernames. Avatar images are fetched automatically. |
+- **`title`**: The display name used on the Hub and Project Overview.
+- **`description`**: A concise summary (max 160 chars) for the project card.
+- **`contributors`**: Array of objects. Avatars are automatically fetched from GitHub.
 
-## The Project Overview Page
+## Project Overview Page
 
-The content body of this file (below the `---`) is automatically rendered as the **Project Overview** page at `/docs/[project-id]`. 
-
-Use this space to provide a high-level "What is this?" overview that applies to all versions of your project.
+The content below the YAML frontmatter in `project.metadata.md` is rendered as the project's root landing page (`/docs/[project-id]/`). Use this space for:
+- High-level project goals.
+- Links to external resources (Discord, Slack).
+- Contribution guidelines.
 
 ---
 
-> **Tip:** Keep your `description` under 160 characters to ensure it looks great on all screen sizes.
+> **Pro Tip:** Adding contributors here will populate the **Facepile** component in the documentation footer for all versions of this project.
