@@ -1,0 +1,251 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  /* --- The Obsidian & Silver Theme (Sophisticated, Monochromatic & Modern) --- */
+  
+  /* Primary Brand Colors - Premium Grayscale / Silver */
+  --color-primary-50: #fafafa;
+  --color-primary-100: #f5f5f5;
+  --color-primary-200: #e5e5e5;
+  --color-primary-300: #d4d4d4;
+  --color-primary-400: #a3a3a3; /* Core Silver */
+  --color-primary-500: #ffffff; /* Main Accent - Pure White for contrast */
+  --color-primary-600: #737373;
+  --color-primary-700: #525252;
+  --color-primary-800: #404040;
+  --color-primary-900: #262626;
+  --color-primary-950: #171717;
+
+  /* Secondary Accent - Deep Slate */
+  --color-accent-400: #94a3b8;
+  --color-accent-500: #64748b;
+
+  /* Semantic Backgrounds - Absolute Black & Deep Grays */
+  --color-midnight: #000000;    /* Absolute Black */
+  --color-surface-low: #050505;  /* Deepest Gray */
+  --color-surface-mid: #0a0a0a;  /* Elevated Card - Soft Obsidian */
+  --color-surface-high: #121212; /* Active State */
+  --color-overlay: rgba(0, 0, 0, 0.9);
+  
+  /* Semantic Text - Precision Contrast */
+  --color-text-main: #ffffff;    /* Pure White */
+  --color-text-muted: #a3a3a3;   /* Neutral Gray */
+  --color-text-dim: #525252;     /* Darker Gray */
+  --color-text-ghost: #262626;   /* Barely Visible */
+  
+  /* Semantic Borders - Razor Sharp Lines */
+  --color-border-subtle: rgba(255, 255, 255, 0.05);
+  --color-border-muted: rgba(255, 255, 255, 0.1);
+  --color-border-active: rgba(255, 255, 255, 0.3);
+  
+  /* Modern Effects */
+  --color-glow: rgba(255, 255, 255, 0.08);
+  --shadow-premium: 0 30px 60px -12px rgba(0, 0, 0, 0.8);
+  
+  /* Semantic States (Desaturated for Elegance) */
+  --color-success: #d1d5db; /* Silver-Gray for success */
+  --color-warning: #71717a;
+  --color-danger: #4b5563;
+  --color-info: #9ca3af;
+
+  /* Fonts & Radius */
+  --font-sans: "Inter", system-ui, sans-serif;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+}
+
+@layer base {
+  html, body {
+    background-color: var(--color-midnight) !important;
+    background-image: 
+      radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.05) 0%, transparent 40%),
+      radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.02) 0%, transparent 30%),
+      radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.03) 0%, transparent 40%),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.01) 0%, transparent 100%);
+    background-attachment: fixed;
+    color: var(--color-text-muted);
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background-color: white;
+    color: black;
+  }
+
+  /* Refined Scrollbar */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: var(--color-midnight); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border-muted);
+    border-radius: 100px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-text-main tracking-tight font-black uppercase;
+    letter-spacing: -0.01em;
+  }
+
+  h1 { @apply text-4xl md:text-6xl lg:text-8xl leading-[1.05]; }
+  h2 { @apply text-2xl md:text-4xl lg:text-5xl border-b border-border-subtle pb-6 mb-10 mt-20; }
+  h3 { @apply text-xl md:text-2xl mt-14 mb-8 tracking-widest; }
+}
+
+@layer components {
+  /* --- Premium Card Utility --- */
+  .premium-card {
+    @apply bg-white/[0.02] border border-border-subtle rounded-2xl transition-all duration-700;
+  }
+  .premium-card:hover {
+    @apply border-white/20 bg-white/[0.04] shadow-premium translate-y-[-4px];
+  }
+
+  /* --- Code Block Wrapper --- */
+  .code-block-wrapper {
+    @apply my-12 rounded-xl border border-white/[0.08] shadow-2xl overflow-hidden relative bg-black;
+  }
+  .code-block-wrapper::before {
+    content: '';
+    @apply absolute top-0 left-0 w-full h-[1px];
+    background: linear-gradient(90deg, transparent, var(--color-border-muted), transparent);
+  }
+
+  /* --- Prose Content Overrides --- */
+  .prose {
+    @apply max-w-none text-text-muted;
+  }
+  
+  .prose :where(h1, h2, h3, h4) {
+    @apply text-text-main font-black tracking-tight scroll-mt-28 uppercase;
+  }
+
+  .prose h2 {
+    @apply text-2xl md:text-3xl mt-20 mb-8 border-b border-border-subtle pb-4 font-black;
+  }
+
+  .prose h3 {
+    @apply text-xl md:text-2xl mt-14 mb-6 font-bold tracking-widest;
+  }
+
+  .prose p {
+    @apply leading-9 my-8 text-[17px] font-light;
+  }
+
+  .prose a {
+    @apply text-white no-underline border-b border-white/20 transition-all font-bold hover:border-white;
+  }
+
+  .prose ul {
+    @apply list-none ml-0 my-10;
+  }
+  
+  .prose li {
+    @apply my-4 pl-6 relative;
+  }
+  .prose li::before {
+    content: '';
+    @apply absolute left-0 top-[0.8em] w-1.5 h-[1px] bg-white/30;
+  }
+
+  .prose strong {
+    @apply text-white font-bold;
+  }
+
+  .prose code {
+    @apply bg-white/5 text-white px-2 py-0.5 rounded text-[0.85em] border border-white/10 font-mono;
+  }
+
+  .prose pre {
+    background-color: transparent !important;
+    @apply p-8 md:p-12 m-0 overflow-x-auto block text-[14px] leading-relaxed;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .prose pre code {
+    @apply bg-transparent p-0 text-inherit border-none;
+  }
+
+  /* Blockquotes */
+  .prose blockquote:not(.admonition) {
+    border-left: 1px solid white;
+    background-color: white/[0.02];
+    color: white;
+    @apply px-10 py-8 my-16 italic text-xl font-light;
+  }
+
+  /* --- Modernized Admonitions --- */
+  .admonition {
+    @apply relative my-12 p-[1px] rounded-xl overflow-hidden shadow-2xl mx-0 max-w-full;
+    background: var(--color-border-muted);
+  }
+    
+  .admonition .admonition-header {
+    @apply flex items-center gap-3 px-6 py-4 font-black uppercase tracking-[0.3em] text-[9px] border-b border-white/[0.03];
+    background: rgba(255, 255, 255, 0.01);
+  }
+    
+  .admonition .admonition-content {
+    @apply px-6 py-5 text-[15px] leading-relaxed bg-black;
+    color: var(--color-text-muted);
+  }
+
+  .admonition-note { 
+    border-left: 4px solid #ffffff; 
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.05), transparent);
+  }
+  .admonition-note .admonition-header { color: #ffffff; }
+
+  .admonition-warning { 
+    border-left: 4px solid #f59e0b; 
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.05), transparent);
+  }
+  .admonition-warning .admonition-header { color: #f59e0b; }
+
+  .admonition-danger { 
+    border-left: 4px solid #ef4444; 
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0.05), transparent);
+  }
+  .admonition-danger .admonition-header { color: #ef4444; }
+
+  /* --- Navigation Links --- */
+  .nav-link-desktop {
+    @apply px-4 lg:px-6 py-1.5 md:py-2 rounded-full text-[9px] lg:text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-500 relative;
+  }
+  .nav-link-desktop.active {
+    @apply text-black bg-white shadow-2xl;
+  }
+  .nav-link-desktop:not(.active) {
+    @apply text-text-muted hover:text-white;
+  }
+
+  .nav-link-mobile {
+    @apply flex items-center justify-between p-6 rounded-[2rem] border transition-all;
+  }
+  .nav-link-mobile.active {
+    @apply bg-white text-black border-white shadow-[0_0_30px_rgba(255,255,255,0.1)];
+  }
+  .nav-link-mobile:not(.active) {
+    @apply bg-white/[0.02] border-border-muted text-text-muted hover:text-white;
+  }
+
+  @media (max-width: 640px) {
+    .admonition { @apply my-8 mx-0; }
+    .admonition .admonition-header { @apply px-4 py-3; }
+    .admonition .admonition-content { @apply px-4 py-4 text-[14px]; }
+  }
+
+  /* Mermaid */
+  .mermaid-container svg {
+    @apply max-w-full h-auto;
+    filter: invert(1) brightness(2); /* Make black diagrams white for dark mode */
+  }
+}

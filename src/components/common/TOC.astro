@@ -1,0 +1,29 @@
+---
+interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const { headings } = Astro.props;
+---
+
+<aside class="hidden xl:block w-64 flex-shrink-0">
+  <div class="sticky top-12">
+    <div class="flex items-center gap-3 mb-8 opacity-40">
+        <div class="w-8 h-px bg-white"></div>
+        <h2 class="text-[10px] font-black uppercase tracking-[0.3em] text-white">
+            On this page
+        </h2>
+    </div>
+    <nav id="table-of-contents">
+      <ul class="space-y-5 text-[11px] border-l border-white/5">
+        {headings.map(h => (
+          <li style={`padding-left: ${(h.depth - 2) * 1}rem`}>
+            <a href={`#${h.slug}`} class="toc-link text-text-dim hover:text-white transition-all block leading-relaxed font-bold uppercase tracking-[0.15em] py-1 border-l-2 border-transparent -ml-[1px] pl-4">
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</aside>

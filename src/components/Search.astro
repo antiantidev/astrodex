@@ -1,0 +1,221 @@
+<div id="search-container">
+  <button 
+    id="search-trigger"
+    class="text-xs font-bold uppercase tracking-tighter text-white border border-border-muted bg-white/5 px-4 py-2 rounded-full hover:bg-white/10 transition-all flex items-center gap-2"
+  >
+    <i class="fa-solid fa-magnifying-glass text-[10px]"></i>
+    Search <span class="text-text-dim font-normal">/ K</span>
+  </button>
+
+  <dialog id="search-dialog" class="bg-transparent backdrop:bg-midnight/80 backdrop:backdrop-blur-sm p-0 m-0 fixed inset-0 max-w-full max-h-full w-full h-full border-none">
+    <div class="flex items-start justify-center pt-12 md:pt-24 px-4 pb-4 h-full">
+      <div class="bg-surface-mid border border-border-muted w-full max-w-2xl rounded-2xl shadow-2xl flex flex-col max-h-[85vh] md:max-h-[70vh] overflow-hidden">
+        <!-- Input area -->
+        <div class="p-4 md:p-6 border-b border-border-subtle flex flex-col gap-4">
+          <div class="flex items-center gap-4">
+            <svg class="text-text-dim shrink-0" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input 
+              type="text" 
+              id="search-input"
+              placeholder="Search documentation..." 
+              class="flex-1 bg-transparent border-none outline-none text-white text-sm md:text-base placeholder:text-text-dim py-2 w-full"
+              autocomplete="off"
+            />
+            <kbd class="hidden sm:block text-[10px] font-mono bg-white/5 border border-border-muted px-1.5 py-0.5 rounded text-text-dim">ESC</kbd>
+          </div>
+          
+          <div id="search-context-container" class="hidden">
+            <label class="flex items-center gap-3 cursor-pointer group w-fit">
+              <div class="relative">
+                <input type="checkbox" id="search-context-toggle" class="sr-only peer" />
+                <div class="w-8 h-4 bg-white/5 border border-border-muted rounded-full peer-checked:bg-primary-500/30 peer-checked:border-primary-500/50 transition-all"></div>
+                <div class="absolute top-1 left-1 w-2 h-2 bg-text-dim rounded-full peer-checked:left-5 peer-checked:bg-primary-400 transition-all"></div>
+              </div>
+              <span class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-text-dim group-hover:text-text-muted transition-colors">
+                Search in <span id="current-project-name" class="text-primary-400">this project</span> only
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Results area -->
+        <div id="search-results" class="flex-1 overflow-y-auto p-2 min-h-[100px] scrollbar-hide">
+          <div class="text-center py-12 text-text-dim text-[10px] font-bold uppercase tracking-[0.3em]" id="search-placeholder">
+            Type to start searching...
+          </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="px-4 py-3 border-t border-border-subtle bg-midnight/50 flex justify-between items-center text-[9px] md:text-[10px] uppercase tracking-widest text-text-dim">
+          <span class="hidden sm:block">Search results are indexed locally</span>
+          <span class="sm:hidden text-[8px]">Local Index</span>
+          <div class="flex gap-3 md:gap-4">
+            <span class="flex items-center gap-1"><kbd class="font-mono text-text-muted">↑↓</kbd> Navigate</span>
+            <span class="flex items-center gap-1"><kbd class="font-mono text-text-muted">↵</kbd> Select</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</div>
+
+<script>
+  interface SearchItem {
+    title: string;
+    description: string;
+    content: string;
+    project: string;
+    version: string;
+    href: string;
+  }
+
+  let searchIndex: SearchItem[] | null = null;
+  const dialog = document.getElementById('search-dialog') as HTMLDialogElement | null;
+  const trigger = document.getElementById('search-trigger');
+  const input = document.getElementById('search-input') as HTMLInputElement | null;
+  const resultsContainer = document.getElementById('search-results');
+  const contextContainer = document.getElementById('search-context-container');
+  const contextToggle = document.getElementById('search-context-toggle') as HTMLInputElement | null;
+  const projectNameSpan = document.getElementById('current-project-name');
+
+  let currentProject: string | null = null;
+
+  async function loadIndex() {
+    if (searchIndex) return;
+    try {
+      const res = await fetch('/search-index.json');
+      searchIndex = await res.json();
+    } catch (e) {
+      console.error('Failed to load search index', e);
+    }
+  }
+
+  function detectProject() {
+    const path = window.location.pathname;
+    if (path.startsWith('/docs/')) {
+      const parts = path.split('/');
+      currentProject = parts[2];
+      if (currentProject && projectNameSpan && contextContainer && contextToggle) {
+        projectNameSpan.textContent = currentProject.replace(/-/g, ' ');
+        contextContainer.classList.remove('hidden');
+        contextToggle.checked = true;
+      }
+    } else {
+      currentProject = null;
+      if (contextContainer) contextContainer.classList.add('hidden');
+    }
+  }
+
+  function openSearch() {
+    detectProject();
+    if (dialog) {
+        dialog.showModal();
+        loadIndex();
+        setTimeout(() => input?.focus(), 10);
+    }
+  }
+
+  function closeSearch() {
+    dialog?.close();
+  }
+
+  trigger?.addEventListener('click', openSearch);
+  
+  dialog?.addEventListener('click', (e) => {
+    if (e.target === dialog) closeSearch();
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      openSearch();
+    }
+    if (e.key === 'Escape') closeSearch();
+  });
+
+  function performSearch() {
+    if (!input || !resultsContainer || !contextToggle) return;
+
+    const query = input.value.toLowerCase().trim();
+    const projectOnly = contextToggle.checked;
+    
+    if (!query) {
+      resultsContainer.innerHTML = `<div class="text-center py-12 text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em]">Type to start searching...</div>`;
+      return;
+    }
+
+    if (!searchIndex) return;
+
+    let filtered = searchIndex.filter(item => 
+      item.title.toLowerCase().includes(query) || 
+      item.description.toLowerCase().includes(query) ||
+      item.content.toLowerCase().includes(query) ||
+      item.project.toLowerCase().includes(query)
+    );
+
+    if (projectOnly && currentProject) {
+      filtered = filtered.filter(item => item.project.toLowerCase() === currentProject!.toLowerCase());
+    }
+
+    if (!projectOnly && currentProject) {
+      filtered.sort((a, b) => {
+        const aIsCurrent = a.project.toLowerCase() === currentProject!.toLowerCase();
+        const bIsCurrent = b.project.toLowerCase() === currentProject!.toLowerCase();
+        if (aIsCurrent && !bIsCurrent) return -1;
+        if (!aIsCurrent && bIsCurrent) return 1;
+        return 0;
+      });
+    }
+
+    if (filtered.length === 0) {
+      resultsContainer.innerHTML = `
+        <div class="text-center py-20 px-6">
+          <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-600 mx-auto mb-4">
+            <i class="fa-solid fa-magnifying-glass-minus text-xl"></i>
+          </div>
+          <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-white mb-2">No results found</p>
+          <p class="text-xs text-slate-600">We couldn't find anything matching "${query}"</p>
+        </div>
+      `;
+      return;
+    }
+
+    resultsContainer.innerHTML = filtered.map(item => `
+      <a href="${item.href}" class="flex flex-col gap-2 p-4 rounded-2xl hover:bg-white/[0.03] border border-transparent hover:border-white/5 group transition-all mb-1">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-[9px] font-black uppercase tracking-widest ${item.project.toLowerCase() === currentProject?.toLowerCase() ? 'text-primary-400' : 'text-slate-500'}">${item.project}</span>
+            <span class="w-1 h-1 rounded-full bg-slate-800"></span>
+            <span class="text-[9px] font-bold text-slate-600 uppercase tracking-widest">${item.version}</span>
+          </div>
+          <i class="fa-solid fa-arrow-right text-[10px] text-slate-800 group-hover:text-primary-500 transition-colors"></i>
+        </div>
+        <div>
+          <div class="text-sm font-bold text-white group-hover:text-primary-400 transition-colors mb-1">${item.title}</div>
+          <div class="text-[11px] text-slate-500 line-clamp-1 font-medium leading-relaxed">${item.description || item.content}</div>
+        </div>
+      </a>
+    `).join('');
+  }
+
+  input?.addEventListener('input', performSearch);
+  contextToggle?.addEventListener('change', performSearch);
+</script>
+
+<style>
+  dialog::backdrop {
+    animation: fade-in 0.2s ease-out;
+  }
+  
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  body:has(dialog[open]) {
+    overflow: hidden;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>

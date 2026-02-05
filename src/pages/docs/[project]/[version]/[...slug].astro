@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import DocsLayout from '../../../../layouts/DocsLayout.astro';
+
+export async function getStaticPaths() {
+  const allDocs = await getCollection('docs');
+  // Lọc bỏ file metadata
+  const docs = allDocs.filter(doc => !doc.id.replace(/\\/g, '/').endsWith('project.metadata.md'));
+  
+  return docs.map(doc => {
+    const path = doc.id.replace(/\\/g, '/');
+    const parts = path.split('/');
+    const project = parts[0];
+    const version = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0');
+    
+    // Slug calculation: if no version folder, use the filename. If version folder exists, use everything after it.
+    const slug = parts.length >= 3 
+      ? parts.slice(2).join('/').replace(/\.(md|mdx)$/, '')
+      : parts[parts.length - 1].replace(/\.(md|mdx)$/, '');
+
+    return {
+      params: { 
+        project,
+        version,
+        slug: slug
+      },
+      props: { doc },
+    };
+  });
+}
+
+const { doc } = Astro.props;
+const { project, version } = Astro.params;
+const { Content, headings } = await doc.render();
+
+// Tính toán reading time đơn giản (nếu cần)
+const readingTime = "5 min read"; 
+---
+
+<DocsLayout 
+  title={doc.data.title} 
+  description={doc.data.description}
+  project={project as string}
+  version={version as string}
+  currentSlug={doc.slug}
+  headings={headings}
+  readingTime={readingTime}
+  status={doc.data.status || 'stable'}
+>
+  <Content />
+</DocsLayout>

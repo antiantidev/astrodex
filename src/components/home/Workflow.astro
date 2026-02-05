@@ -1,0 +1,77 @@
+---
+import { SITE_CONFIG } from "../../site.config";
+---
+<section class="py-16 md:py-24 border-t border-border-subtle">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16 md:mb-20">
+            <h2 class="text-[10px] font-black uppercase tracking-[0.4em] text-text-dim mb-4">Deployment</h2>
+            <p class="text-2xl md:text-3xl lg:text-4xl font-black text-text-main tracking-tighter uppercase">Launch in Seconds.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-16 md:mb-20">
+            <div class="relative p-6 md:p-8 rounded-3xl border border-border-subtle bg-white/[0.01]">
+                <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white/5 flex items-center justify-center text-white mb-6 font-black border border-white/10 text-sm md:text-base shadow-lg shadow-white/5">1</div>
+                <h3 class="text-base md:text-lg font-black text-text-main mb-4 uppercase tracking-tight">Use Template</h3>
+                <p class="text-sm text-text-muted leading-relaxed font-light">Create your own private or public documentation repository in one click using the GitHub template feature.</p>
+            </div>
+            <div class="relative p-6 md:p-8 rounded-3xl border border-border-subtle bg-white/[0.01]">
+                <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white/5 flex items-center justify-center text-white mb-6 font-black border border-white/10 text-sm md:text-base shadow-lg shadow-white/5">2</div>
+                <h3 class="text-base md:text-lg font-black text-text-main mb-4 uppercase tracking-tight">Personalize</h3>
+                <p class="text-sm text-text-muted leading-relaxed font-light">Update `site.config.ts` to instantly customize your brand name, logo, social links, and navigation items.</p>
+            </div>
+            <div class="relative p-6 md:p-8 rounded-3xl border border-border-subtle bg-white/[0.01]">
+                <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white/5 flex items-center justify-center text-white mb-6 font-black border border-white/10 text-sm md:text-base shadow-lg shadow-white/5">3</div>
+                <h3 class="text-base md:text-lg font-black text-text-main mb-4 uppercase tracking-tight">Ship It</h3>
+                <p class="text-sm text-text-muted leading-relaxed font-light">Deploy to Vercel, Netlify, or GH Pages. Your documentation engine is built for global edge distribution.</p>
+            </div>
+        </div>
+
+        <!-- Terminal Component -->
+        <div class="max-w-4xl mx-auto">
+            <div class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-white/10 to-zinc-500/10 rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                <div class="relative bg-surface-mid border border-border-muted rounded-3xl overflow-hidden shadow-2xl">
+                    <div class="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-border-subtle bg-white/[0.02]">
+                        <div class="flex gap-1.5 md:gap-2">
+                            <div class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-zinc-800 border border-zinc-700"></div>
+                            <div class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-zinc-800 border border-zinc-700"></div>
+                            <div class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-zinc-800 border border-zinc-700"></div>
+                        </div>
+                        <div class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-text-dim flex items-center gap-2">
+                            <i class="fa-solid fa-terminal text-[9px]"></i> Local Development Pipeline
+                        </div>
+                        <div class="w-8 md:w-10"></div>
+                    </div>
+                    <div class="p-6 md:p-12 font-mono text-[10px] sm:text-xs md:text-sm leading-relaxed overflow-x-auto">
+                        <div class="flex gap-4 mb-2 whitespace-nowrap">
+                            <span class="text-white opacity-40 select-none">$</span>
+                            <span class="text-text-main">git clone {SITE_CONFIG.links.github}</span>
+                        </div>
+                        <div class="flex gap-4 mb-2 whitespace-nowrap">
+                            <span class="text-white opacity-40 select-none">$</span>
+                            <span class="text-text-main">npm install && npm run dev</span>
+                        </div>
+                        <div class="flex flex-col gap-2 py-4 md:py-6 my-4 md:my-6 border-y border-border-subtle">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-gear fa-spin text-white opacity-40"></i>
+                                <span class="text-text-muted">Initializing <span class="text-white">Astrodex v1.0.1</span> Engine...</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-check text-zinc-400"></i>
+                                <span class="text-text-muted">Content Schema Validation: <span class="text-white">Passed</span></span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-bolt text-white animate-pulse"></i>
+                                <span class="text-text-muted">Local Server: <span class="text-white underline">http://localhost:4321</span></span>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 whitespace-nowrap">
+                            <span class="text-white">✔</span>
+                            <span class="text-white font-black uppercase tracking-widest text-[9px] md:text-[10px]">Ready to build your knowledge base</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

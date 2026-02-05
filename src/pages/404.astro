@@ -1,0 +1,36 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { SITE_CONFIG } from '../site.config';
+---
+
+<Layout title={`404 - Lost in Space | ${SITE_CONFIG.brand.name}`}>
+  <div class="min-h-[80vh] flex flex-col items-center justify-center text-center px-6 relative overflow-hidden bg-midnight">
+    
+    <!-- Background Effects -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-white/[0.03] blur-[150px] rounded-full pointer-events-none"></div>
+
+    <div class="relative z-10">
+        <div class="text-[12rem] md:text-[16rem] font-black text-white/[0.02] leading-none select-none">
+            404
+        </div>
+        
+        <div class="mt-[-4rem] md:mt-[-6rem]">
+            <h1 class="text-3xl md:text-5xl font-black text-text-main mb-6 tracking-tight uppercase">
+                Coordinates Not Found
+            </h1>
+            <p class="text-text-muted text-lg max-w-lg mx-auto mb-10 font-light">
+                The documentation you are looking for has been moved, deleted, or never existed in this sector.
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="/" class="px-8 py-3 rounded-full bg-white text-black text-xs font-black uppercase tracking-[0.2em] hover:bg-zinc-200 transition-all shadow-[0_0_20px_var(--color-glow)]">
+                    Return Base
+                </a>
+                <a href="/docs" class="px-8 py-3 rounded-full border border-border-muted text-text-dim text-xs font-black uppercase tracking-[0.2em] hover:bg-white/5 hover:text-text-main transition-all">
+                    Search Ecosystem
+                </a>
+            </div>
+        </div>
+    </div>
+  </div>
+</Layout>

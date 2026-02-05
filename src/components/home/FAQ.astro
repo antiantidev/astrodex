@@ -1,0 +1,74 @@
+---
+const faqs = [
+    {
+        q: "What is the Astrodex Starter Kit?",
+        a: "Astrodex is a premium, open-source documentation template built with Astro 5.x and Tailwind CSS v4. It provides everything you need to launch a professional, multi-version documentation site in minutes."
+    },
+    {
+        q: "Is it really 100% free?",
+        a: "Yes. Astrodex is licensed under MIT and is free for both personal and commercial use. No hidden fees, no subscriptions, no strings attached."
+    },
+    {
+        q: "How do I customize the branding?",
+        a: "All visual variables (colors, fonts, spacing) are defined in `src/styles/global.css` using CSS custom properties. You can rebrand the entire site by changing a few hex codes."
+    },
+    {
+        q: "Can I host it anywhere?",
+        a: "Absolutely. Since Astrodex generates static HTML, you can deploy it to Vercel, Netlify, Cloudflare Pages, GitHub Pages, or any static web host for zero cost."
+    },
+    {
+        q: "Does it support MDX?",
+        a: "Yes. Astrodex fully supports Markdown and MDX, allowing you to embed interactive Astro components directly into your documentation articles."
+    }
+];
+---
+
+<section class="py-24 border-t border-border-muted bg-midnight">
+    <div class="container mx-auto px-6 max-w-4xl">
+        <div class="text-center mb-16">
+            <h2 class="text-[10px] font-black uppercase tracking-[0.4em] text-text-dim mb-4">FAQ</h2>
+            <p class="text-3xl md:text-4xl font-black text-text-main tracking-tighter uppercase">Common Questions.</p>
+        </div>
+
+        <div class="space-y-4">
+            {faqs.map(faq => (
+                <details class="group border border-border-subtle rounded-2xl bg-white/[0.01] overflow-hidden transition-all duration-500 hover:border-white/20">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+                        <span class="text-sm md:text-base font-bold text-text-dim group-open:text-white transition-colors uppercase tracking-tight">
+                            {faq.q}
+                        </span>
+                        <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-open:rotate-180 group-open:bg-white group-open:text-black transition-all duration-500 border border-border-muted">
+                            <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                        </div>
+                    </summary>
+                    <div class="faq-content px-6 pb-8 pt-2">
+                        <p class="text-sm md:text-base text-text-muted leading-relaxed font-light border-l border-white/10 pl-6">
+                            {faq.a}
+                        </p>
+                    </div>
+                </details>
+            ))}
+        </div>
+    </div>
+</section>
+
+<style>
+    .faq-content {
+        animation: slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    summary::-webkit-details-marker {
+        display: none;
+    }
+</style>

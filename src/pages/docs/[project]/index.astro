@@ -1,0 +1,166 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../../layouts/Layout.astro";
+
+import { SITE_CONFIG } from "../../../site.config";
+
+export async function getStaticPaths() {
+  const allDocs = await getCollection("docs");
+  const projectIds = [
+    ...new Set(allDocs.map((doc) => doc.id.replace(/\\/g, "/").split("/")[0])),
+  ];
+
+  return projectIds.map((project) => ({
+    params: { project },
+  }));
+}
+
+const { project } = Astro.params;
+const allDocs = await getCollection("docs");
+
+const projectAllDocs = allDocs.filter((d) =>
+  d.id.replace(/\\/g, "/").startsWith(`${project}/`),
+);
+
+const projectMetadata = projectAllDocs.find((d) => {
+  const path = d.id.replace(/\\/g, "/");
+  return path === `${project}/project.metadata.md` || d.slug === `${project}/projectmetadata`;
+});
+
+const { Content } = projectMetadata
+  ? await projectMetadata.render()
+  : { Content: null };
+
+const versionDocs = projectAllDocs.filter((d) => {
+  const path = d.id.replace(/\\/g, "/");
+  return !path.endsWith('project.metadata.md');
+});
+
+const versions = [
+  ...new Set(
+    versionDocs.map((d) => {
+      const path = d.id.replace(/\\/g, "/");
+      const parts = path.split("/");
+      if (parts.length >= 3 && parts[1].startsWith('v')) {
+        return parts[1];
+      }
+      return String(d.data.version || "v1.0.1");
+    }),
+  ),
+].sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
+
+const contributors = projectMetadata?.data?.contributors || [];
+
+const projectName =
+  projectMetadata?.data?.title || project.replace(/-/g, " ").toUpperCase();
+const description =
+  projectMetadata?.data?.description ||
+  `Explore documentation for ${projectName}.`;
+
+const getFirstDocLink = (ver: string) => {
+  return `/docs/${project}/${ver}`;
+};
+---
+
+<Layout title={`${projectName} - Project Hub`} description={description}>
+  <div class="pt-32 pb-24 border-b border-border-subtle">
+    <div class="container mx-auto px-6">
+      <nav class="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-text-dim mb-8">
+        <a href="/" class="hover:text-text-main transition-colors">Home</a>
+        <span class="text-border-muted">/</span>
+        <a href="/docs" class="hover:text-text-main transition-colors">Ecosystem</a>
+        <span class="text-border-muted">/</span>
+        <span class="text-text-main">{project}</span>
+      </nav>
+      <h1 class="text-4xl lg:text-6xl font-black mb-8 tracking-tighter text-text-main leading-tight uppercase">
+        {projectName}<span class="text-white opacity-20">.</span>
+      </h1>
+      <p class="text-lg text-text-muted max-w-3xl leading-relaxed mb-12 font-light">
+        {description}
+      </p>
+
+      <div class="flex flex-wrap gap-4">
+        {versions.map((ver) => (
+            <a href={getFirstDocLink(ver)} class="group p-1 rounded-2xl bg-gradient-to-br from-white/10 to-transparent hover:from-white/20 hover:to-zinc-500/20 transition-all duration-500 shadow-2xl">
+              <div class="bg-surface-mid rounded-[calc(1rem-1px)] px-8 py-4 flex items-center gap-4 border border-white/5">
+                <div class="flex flex-col">
+                  <span class="text-[9px] font-black uppercase tracking-[0.2em] text-text-dim group-hover:text-text-muted transition-colors">Available Version</span>
+                  <span class="text-lg font-black text-white">{ver}</span>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                  <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1" />
+                </div>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="py-24">
+    <div class="container mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-16">
+        <div class="lg:col-span-2">
+          <h2 class="text-[10px] font-black uppercase tracking-[0.4em] text-text-main mb-12 border-b border-border-subtle pb-4 w-fit">Project Overview</h2>
+          <article class="prose prose-zinc prose-invert max-w-none">
+            {Content ? <Content /> : <p>No detailed overview available for this project yet.</p>}
+          </article>
+        </div>
+
+        <div class="space-y-12">
+          <!-- Maintainers with "Show More" Logic -->
+          {contributors.length > 0 && (
+            <div>
+                <h2 class="text-[10px] font-black uppercase tracking-[0.4em] text-text-main mb-8">Maintainers</h2>
+                <div class="grid grid-cols-1 gap-4" id="maintainers-list">
+                {contributors.map((c, index) => (
+                    <a 
+                        href={`https://github.com/${c.username}`} 
+                        target="_blank" 
+                        class={`flex items-center gap-4 p-4 rounded-2xl bg-white/[0.02] border border-border-subtle hover:border-white/30 transition-all group ${index >= 6 ? 'hidden extra-maintainer' : ''}`}
+                    >
+                        <img src={`https://github.com/${c.username}.png`} class="w-10 h-10 rounded-full border border-border-muted group-hover:border-white/50" />
+                        <div class="flex flex-col">
+                        <span class="text-sm font-bold text-white group-hover:text-text-main">{c.username}</span>
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-text-dim">{c.role}</span>
+                        </div>
+                    </a>
+                    ))
+                }
+                </div>
+                
+                {contributors.length > 6 && (
+                    <button 
+                        id="show-more-maintainers"
+                        class="mt-6 w-full py-3 rounded-xl border border-dashed border-border-muted text-[10px] font-bold uppercase tracking-widest text-text-dim hover:border-white/30 hover:text-text-main transition-all"
+                    >
+                        View all {contributors.length} maintainers
+                    </button>
+                )}
+            </div>
+          )}
+
+          <div class="p-8 rounded-3xl bg-white/[0.02] border border-border-subtle relative overflow-hidden">
+            <i class="fa-brands fa-github absolute -bottom-4 -right-4 text-8xl text-white opacity-5"></i>
+            <h3 class="text-sm font-bold text-white mb-4 uppercase tracking-widest">Want to help?</h3>
+            <p class="text-xs text-text-muted leading-relaxed mb-6 font-light">This project is open-source. You can improve this documentation by submitting a Pull Request on GitHub.</p>
+            <a href={`${SITE_CONFIG.links.github}/blob/main/src/content/docs/${project}/project.metadata.md`} target="_blank" class="block w-full py-3 rounded-xl bg-white text-black text-center text-[10px] font-black uppercase tracking-widest hover:bg-zinc-200 transition-all shadow-lg shadow-white/5">
+              Edit Metadata
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+    const showMoreBtn = document.getElementById('show-more-maintainers');
+    const extraMaintainers = document.querySelectorAll('.extra-maintainer');
+
+    showMoreBtn?.addEventListener('click', () => {
+        extraMaintainers.forEach(el => el.classList.remove('hidden'));
+        showMoreBtn.style.display = 'none';
+    });
+</script>

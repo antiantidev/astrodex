@@ -1,0 +1,207 @@
+---
+import Search from "./Search.astro";
+import { SITE_CONFIG } from "../site.config";
+
+const { pathname } = Astro.url;
+const normalizedPath = pathname.replace(/\/$/, "");
+
+const navItems = SITE_CONFIG.navigation;
+
+const socialLinks = [
+  {
+    name: "GitHub",
+    href: SITE_CONFIG.links.github,
+    icon: "fa-brands fa-github",
+  },
+];
+---
+
+<header class="relative z-[100] w-full transition-all duration-300">
+  <!-- Background -->
+  <div
+    class="absolute inset-0 bg-midnight/80 backdrop-blur-xl border-b border-border-muted"
+  >
+  </div>
+
+  <div
+    class="container mx-auto relative px-4 md:px-6 h-16 md:h-20 flex items-center justify-between"
+  >
+    <!-- Logo Section -->
+    <div class="flex items-center">
+      <a href="/" class="group flex items-center gap-2 md:gap-3">
+        <div
+          class="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:border-white group-hover:scale-110 transition-all duration-500"
+        >
+          <span
+            class="text-white font-black text-lg md:text-xl tracking-tighter"
+            >{SITE_CONFIG.brand.logoText}</span
+          >
+        </div>
+        <div class="flex flex-col leading-none">
+          <span
+            class="text-xs md:text-sm font-black tracking-[0.2em] uppercase text-text-main"
+          >
+            {SITE_CONFIG.brand.name}<span class="text-white opacity-20">.</span>
+          </span>
+          <span
+            class="text-[7px] md:text-[8px] font-bold tracking-[0.2em] uppercase text-text-dim mt-0.5 md:mt-1 hidden sm:block"
+            >{SITE_CONFIG.brand.tagline}</span
+          >
+        </div>
+      </a>
+    </div>
+
+    <!-- Navigation (Centered Pill) -->
+    <nav
+      class="hidden md:flex items-center bg-white/[0.02] border border-border-muted p-1 rounded-full backdrop-blur-md"
+    >
+      {
+        navItems.map((item) => {
+          const isActive =
+            normalizedPath === item.href ||
+            (item.href !== "/" && normalizedPath.startsWith(item.href));
+          return (
+            <a
+              href={item.href}
+              class={`nav-link-desktop ${isActive ? "active" : ""}`}
+            >
+              <span class="relative z-10">{item.name}</span>
+            </a>
+          );
+        })
+      }
+    </nav>
+
+    <!-- Actions Section -->
+    <div class="flex items-center justify-end gap-2 md:gap-4 lg:gap-6">
+      <div class="hidden lg:flex items-center gap-2">
+        {
+          socialLinks.map((link) => (
+            <a
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-text-muted hover:text-white transition-all p-2 hover:bg-white/5 rounded-xl border border-transparent hover:border-border-muted"
+              title={link.name}
+            >
+              <i class={link.icon + " text-lg"} />
+            </a>
+          ))
+        }
+      </div>
+
+      <div class="w-px h-6 bg-border-muted hidden sm:block"></div>
+
+      <Search />
+
+      <!-- Mobile Menu Button (Matched height with Search) -->
+      <button
+        id="header-mobile-trigger"
+        class="md:hidden w-10 h-10 flex items-center justify-center text-text-muted hover:text-white bg-white/5 rounded-full border border-border-muted active:scale-95 transition-all relative z-[110]"
+      >
+        <i class="fa-solid fa-bars-staggered text-xs" id="header-trigger-icon"
+        ></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Overlay -->
+  <div
+    id="header-mobile-menu"
+    class="fixed inset-0 bg-midnight z-[105] md:hidden translate-x-full transition-transform duration-500 ease-in-out pt-24 px-6"
+  >
+    <div class="flex flex-col gap-4">
+      <p
+        class="text-[9px] font-black uppercase tracking-[0.3em] text-text-dim mb-4 px-4"
+      >
+        Navigation
+      </p>
+      {
+        navItems.map((item) => {
+          const isActive =
+            normalizedPath === item.href ||
+            (item.href !== "/" && normalizedPath.startsWith(item.href));
+          return (
+            <a
+              href={item.href}
+              class={`nav-link-mobile ${isActive ? "active" : ""}`}
+            >
+              <span class="text-lg font-black uppercase tracking-widest">
+                {item.name}
+              </span>
+              <i
+                class={`fa-solid ${isActive ? "fa-chevron-left" : "fa-chevron-right"} text-xs`}
+              />
+            </a>
+          );
+        })
+      }
+
+      <div class="mt-8 pt-8 border-t border-border-muted flex flex-col gap-6">
+        <p
+          class="text-[9px] font-black uppercase tracking-[0.3em] text-text-dim px-4"
+        >
+          Social Presence
+        </p>
+        <div class="flex gap-4 px-4">
+          {
+            socialLinks.map((link) => (
+              <a
+                href={link.href}
+                target="_blank"
+                class="w-12 h-12 rounded-2xl bg-white/5 border border-border-muted flex items-center justify-center text-text-muted text-xl hover:text-white transition-all"
+              >
+                <i class={link.icon} />
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script is:inline>
+  function initHeaderMenu() {
+    const trigger = document.getElementById("header-mobile-trigger");
+    const menu = document.getElementById("header-mobile-menu");
+    const icon = document.getElementById("header-trigger-icon");
+
+    trigger?.addEventListener("click", () => {
+      const isClosed = menu.classList.contains("translate-x-full");
+      if (isClosed) {
+        menu.classList.remove("translate-x-full");
+        icon.classList.replace("fa-bars-staggered", "fa-xmark");
+        document.body.style.overflow = "hidden";
+      } else {
+        menu.classList.add("translate-x-full");
+        icon.classList.replace("fa-xmark", "fa-bars-staggered");
+        document.body.style.overflow = "";
+      }
+    });
+
+    // Close menu on navigation
+    menu?.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        menu.classList.add("translate-x-full");
+        icon.classList.replace("fa-xmark", "fa-bars-staggered");
+        document.body.style.overflow = "";
+        isOpen = false;
+      });
+    });
+  }
+
+  initHeaderMenu();
+  document.addEventListener("astro:after-swap", initHeaderMenu);
+</script>
+
+<style>
+  /* Hiệu ứng glassmorphism cho menu di động */
+  #header-mobile-menu {
+    background-image: radial-gradient(
+      circle at 0% 0%,
+      rgba(255, 255, 255, 0.03) 0%,
+      transparent 50%
+    );
+  }
+</style>

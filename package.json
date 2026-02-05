@@ -1,0 +1,26 @@
+{
+  "name": "astrodex",
+  "type": "module",
+  "version": "1.0.1",
+  "description": "A premium, monochromatic documentation starter kit built with Astro 5.x and Tailwind CSS v4.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.6",
+    "@astrojs/sitemap": "^3.7.0",
+    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/vite": "^4.1.18",
+    "astro": "^5.17.1",
+    "mdast-util-to-string": "^4.0.0",
+    "reading-time": "^1.5.0",
+    "typescript": "^5.5.4"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.1.18"
+  }
+}

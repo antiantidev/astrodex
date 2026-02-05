@@ -1,0 +1,77 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { SITE_CONFIG } from '../site.config';
+---
+
+<Layout title={`Privacy Policy | ${SITE_CONFIG.brand.name}`} description={`Our commitment to your privacy and data ownership in the ${SITE_CONFIG.brand.name} ecosystem.`}>
+  <div class="pt-32 pb-24 md:pt-48 md:pb-40 bg-midnight relative overflow-hidden">
+    <!-- Visual Decorations -->
+    <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[600px] h-[600px] bg-white/[0.02] blur-[150px] rounded-full pointer-events-none"></div>
+
+    <div class="container mx-auto px-6 relative z-10">
+      <div class="max-w-3xl">
+        <nav class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-text-dim mb-12">
+            <a href="/" class="hover:text-white transition-colors">Home</a>
+            <span class="opacity-20">/</span>
+            <span class="text-white">Privacy</span>
+        </nav>
+
+        <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-text-main mb-12 tracking-tighter uppercase leading-tight">
+            Privacy <br/> Protocol<span class="text-white opacity-20">.</span>
+        </h1>
+
+        <div class="prose prose-zinc prose-invert max-w-none 
+            prose-p:text-text-muted prose-p:font-light prose-p:leading-relaxed 
+            prose-headings:text-text-main prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tight
+            prose-strong:text-white prose-strong:font-bold">
+            
+            <p class="text-xl md:text-2xl !leading-relaxed mb-16 border-l-2 border-white/10 pl-8 italic">
+                {SITE_CONFIG.brand.name} is built on the foundation of transparency and data sovereignty. We believe your technical knowledge belongs to you, and your privacy is non-negotiable.
+            </p>
+
+            <h2>1. Zero Data Collection</h2>
+            <p>
+                By default, the core {SITE_CONFIG.brand.name} engine does not collect, store, or transmit any personal data. As a static site generator, all processing happens during build-time or locally within your browser. We do not use tracking cookies, finger-printing, or hidden analytics.
+            </p>
+
+            <h2>2. Data Ownership</h2>
+            <p>
+                All documentation content, metadata, and configuration files reside within your own repository. {SITE_CONFIG.brand.name} has no "cloud" component that stores your data. You have complete control over where your documentation is hosted and who has access to it.
+            </p>
+
+            <h2>3. Local Persistence</h2>
+            <p>
+                To improve your user experience, we use <strong>localStorage</strong> to remember UI preferences, such as:
+            </p>
+            <ul>
+                <li>Sidebar collapsible group states (open/closed).</li>
+                <li>Theme preferences (if applicable).</li>
+            </ul>
+            <p>
+                This data never leaves your device and is not accessible by us or any third party.
+            </p>
+
+            <h2>4. Third-Party Services</h2>
+            <p>
+                {SITE_CONFIG.brand.name} is designed to be self-contained. However, depending on your configuration, you may choose to integrate third-party services:
+            </p>
+            <ul>
+                <li><strong>GitHub:</strong> Used for fetching contributor avatars and hosting the repository.</li>
+                <li><strong>Hosting Providers:</strong> If you deploy to Vercel, Netlify, or similar platforms, they may collect standard web server logs (IP addresses, user agents) as part of their infrastructure.</li>
+            </ul>
+
+            <h2>5. Open Source Audit</h2>
+            <p>
+                Our codebase is 100% open-source. We encourage security researchers and users to audit our source code on GitHub to verify our privacy claims.
+            </p>
+
+            <div class="mt-24 pt-12 border-t border-white/5">
+                <p class="text-xs text-text-dim uppercase tracking-widest font-black">
+                    Last Protocol Update: February 5, 2026
+                </p>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

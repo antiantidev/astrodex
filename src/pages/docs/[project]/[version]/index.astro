@@ -1,0 +1,53 @@
+---
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allDocs = await getCollection('docs');
+  
+  // Lấy tất cả project/version combinations
+  const combinations = new Set();
+  allDocs.forEach(doc => {
+    const path = doc.id.replace(/\\/g, '/');
+    const parts = path.split('/');
+    if (parts.length >= 2) {
+      const project = parts[0];
+      const version = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0');
+      combinations.add(`${project}|${version}`);
+    }
+  });
+
+  return Array.from(combinations).map(combo => {
+    const [project, version] = (combo as string).split('|');
+    return {
+      params: { project, version }
+    };
+  });
+}
+
+const { project, version } = Astro.params;
+const allDocs = await getCollection('docs');
+
+// Tìm doc đầu tiên của version này
+const versionDocs = allDocs
+  .filter(doc => {
+    const path = doc.id.replace(/\\/g, '/');
+    const parts = path.split('/');
+    const docProject = parts[0];
+    const docVersion = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0');
+    return docProject === project && docVersion === version && !path.endsWith('project.metadata.md');
+  })
+  .sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
+
+const firstDoc = versionDocs[0];
+
+if (!firstDoc) {
+  return Astro.redirect('/docs');
+}
+
+const parts = firstDoc.id.replace(/\\/g, '/').split('/');
+const slug = parts.length >= 3 
+  ? parts.slice(2).join('/').replace(/\.(md|mdx)$/, '')
+  : parts[parts.length - 1].replace(/\.(md|mdx)$/, '');
+
+return Astro.redirect(`/docs/${project}/${version}/${slug}`);
+---

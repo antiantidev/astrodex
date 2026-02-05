@@ -1,0 +1,196 @@
+---
+import Layout from "./Layout.astro";
+import Sidebar from "../components/Sidebar.astro";
+import TOC from "../components/common/TOC.astro";
+import DocsHeader from "../components/docs/DocsHeader.astro";
+import DocsFooter from "../components/docs/DocsFooter.astro";
+import { getCollection } from "astro:content";
+
+interface Props {
+  title: string;
+  description?: string;
+  project: string;
+  version: string;
+  currentSlug: string;
+  headings: any[];
+  readingTime: string;
+  status: string;
+}
+
+const { title, description, project, version, currentSlug, headings, readingTime, status } = Astro.props;
+
+const allDocs = await getCollection("docs");
+
+// 1. Lấy Project Metadata
+const projectMetadata = allDocs.find((d) => {
+  const path = d.id.replace(/\\/g, "/");
+  return path === `${project}/project.metadata.md` || d.slug === `${project}/projectmetadata`;
+});
+
+const contributorsList = projectMetadata?.data?.contributors || [];
+
+// 2. Lấy danh sách bài viết
+const projectDocs = allDocs
+  .filter((doc) => {
+    const path = doc.id.replace(/\\/g, '/');
+    const parts = path.split('/');
+    const docProject = parts[0];
+    const docVersion = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0');
+    
+    return docProject === project && 
+           String(docVersion) === String(version) && 
+           !path.endsWith('project.metadata.md');
+  })
+  .sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
+
+const currentIndex = projectDocs.findIndex((d) => d.slug === currentSlug || (!currentSlug && d.id === projectDocs[0]?.id));
+let prevDoc = currentIndex > 0 ? projectDocs[currentIndex - 1] : null;
+let nextDoc = currentIndex < projectDocs.length - 1 ? projectDocs[currentIndex + 1] : null;
+
+// 3. Chuyển đổi dữ liệu contributor với Facepile logic
+const MAX_VISIBLE_CONTRIBUTORS = 12;
+const displayContributors = contributorsList.slice(0, MAX_VISIBLE_CONTRIBUTORS).map(c => ({
+    ...c,
+    avatar: `https://github.com/${c.username}.png`,
+    link: `https://github.com/${c.username}`
+}));
+const extraCount = contributorsList.length - MAX_VISIBLE_CONTRIBUTORS;
+
+const getDocLink = (doc: any) => {
+  if (!doc) return '#';
+  const path = doc.id.replace(/\\/g, '/');
+  const parts = path.split('/');
+  const p = parts[0];
+  const v = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0');
+  
+  const s = parts.length >= 3 
+    ? parts.slice(2).join('/').replace(/\.(md|mdx)$/, '')
+    : parts[parts.length - 1].replace(/\.(md|mdx)$/, '');
+
+  return `/docs/${p}/${v}/${s}`;
+};
+---
+
+<Layout title={title} description={description} type="article">
+  <div class="container mx-auto px-0 sm:px-4 md:px-6">
+    <!-- Reading Progress Bar -->
+    <div id="reading-progress" class="fixed top-0 left-0 h-[2px] bg-white z-[110] transition-all duration-150 w-0"></div>
+
+    <div class="flex flex-col lg:flex-row gap-0 lg:gap-8 xl:gap-12">
+      <Sidebar project={project} currentSlug={currentSlug} docs={projectDocs} />
+
+      <div class="flex-1 min-w-0 flex flex-col xl:flex-row gap-8 lg:gap-12 py-6 md:py-10 lg:py-12 px-4 sm:px-0">
+        <div class="flex-1 max-w-4xl">
+          <DocsHeader 
+            project={project} 
+            version={version} 
+            title={title} 
+            description={description} 
+            status={status} 
+            readingTime={readingTime} 
+            headings={headings} 
+          />
+
+          <article class="prose prose-zinc prose-invert max-w-none" id="docs-content">
+            <slot />
+          </article>
+
+          <DocsFooter 
+            project={project} 
+            contributors={displayContributors} 
+            extraCount={extraCount} 
+            prevDoc={prevDoc} 
+            nextDoc={nextDoc} 
+            getDocLink={getDocLink} 
+          />
+        </div>
+
+        <TOC headings={headings} />
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline>
+  function initDocNavigation() {
+    // 1. Reading Progress
+    const progressBar = document.getElementById('reading-progress');
+    window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        if (progressBar) progressBar.style.width = scrolled + "%";
+    });
+
+    // 2. Mobile TOC Toggle
+    const tocTrigger = document.getElementById('mobile-toc-trigger');
+    const tocMenu = document.getElementById('mobile-toc-menu');
+    const tocIcon = document.getElementById('mobile-toc-icon');
+    
+    tocTrigger?.addEventListener('click', () => {
+        const isHidden = tocMenu.classList.contains('hidden');
+        if (isHidden) {
+            tocMenu.classList.remove('hidden');
+            tocIcon.classList.add('rotate-180');
+        } else {
+            tocMenu.classList.add('hidden');
+            tocIcon.classList.remove('rotate-180');
+        }
+    });
+
+    // 3. Active Heading Tracking
+    const links = document.querySelectorAll('.toc-link, .mobile-toc-link');
+    const sections = Array.from(document.querySelectorAll('#docs-content h2, #docs-content h3, #docs-content h4'));
+    
+    const observerOptions = {
+      root: null,
+      rootMargin: '-10% 0px -80% 0px',
+      threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          if (!id) return;
+
+          links.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === `#${id}`) {
+              link.classList.add('text-primary-400', 'border-primary-500');
+              link.classList.remove('text-slate-500');
+              const dot = link.querySelector('.marker-dot');
+              if (dot) dot.classList.add('bg-primary-500', 'scale-150');
+            } else {
+              link.classList.remove('text-primary-400', 'border-primary-500');
+              link.classList.add('text-slate-500');
+              const dot = link.querySelector('.marker-dot');
+              if (dot) dot.classList.remove('bg-primary-500', 'scale-150');
+            }
+          });
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(section => observer.observe(section));
+
+    // Close mobile TOC on link click
+    links.forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth < 1280) {
+                tocMenu?.classList.add('hidden');
+                tocIcon?.classList.remove('rotate-180');
+            }
+        });
+    });
+  }
+
+  initDocNavigation();
+  document.addEventListener("astro:after-swap", initDocNavigation);
+</script>
+
+<style is:global>
+  .marker-dot { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+  html { scroll-padding-top: 100px; }
+  .active-toc { border-color: rgb(20, 184, 166) !important; }
+</style>

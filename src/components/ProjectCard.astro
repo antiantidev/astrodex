@@ -1,0 +1,59 @@
+---
+interface Props {
+  name: string;
+  description: string;
+  href: string;
+  count: number;
+  versions?: string[];
+  currentVersion?: string;
+}
+
+const { name, description, href, count, versions = [], currentVersion } = Astro.props;
+---
+
+<div class="premium-card group relative flex flex-col p-8">
+  <div class="flex flex-col h-full">
+    <div class="flex justify-between items-start mb-4">
+      <a href={href} class="flex-1">
+        <h3 class="text-sm font-bold tracking-widest uppercase text-text-main group-hover:text-primary-400 transition-colors flex items-center gap-2">
+          <i class="fa-solid fa-layer-group text-primary-500/50 text-xs"></i>
+          {name}
+        </h3>
+      </a>
+      <span class="text-[10px] px-2 py-1 rounded-full border border-border-muted text-text-muted uppercase tracking-tighter flex items-center gap-1.5">
+        <i class="fa-regular fa-file-lines text-[9px]"></i>
+        {count} Docs
+      </span>
+    </div>
+
+    <p class="text-xs leading-relaxed text-text-muted mb-6 line-clamp-2">
+      {description}
+    </p>
+
+    {versions.length > 0 && (
+      <div class="mb-8">
+        <div class="text-[10px] font-bold uppercase tracking-widest text-text-dim mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-code-branch text-[9px]"></i> Available Versions
+        </div>
+        <div class="flex flex-wrap gap-2">
+          {versions.map(ver => (
+            <span class={`text-[9px] px-2 py-0.5 rounded border transition-colors ${
+              ver === currentVersion 
+                ? 'bg-primary-500/10 border-primary-500/30 text-primary-400' 
+                : 'border-border-muted text-text-dim hover:border-border-active hover:text-text-muted'
+            }`}>
+              {ver}
+            </span>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <div class="mt-auto pt-4 flex items-center justify-between">
+      <a href={href} class="flex items-center text-[10px] font-bold uppercase tracking-widest text-primary-500 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-all lg:-translate-x-2 group-hover:translate-x-0 gap-2">
+        Enter Documentation 
+        <i class="fa-solid fa-arrow-right-long transition-transform group-hover:translate-x-1"></i>
+      </a>
+    </div>
+  </div>
+</div>

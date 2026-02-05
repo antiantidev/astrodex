@@ -1,0 +1,335 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  project: string;
+  currentSlug: string;
+  docs: any[];
+}
+
+const { project, currentSlug, docs } = Astro.props;
+
+const allDocs = await getCollection('docs');
+const projectAllDocs = allDocs.filter(d => d.id.replace(/\\/g, '/').startsWith(`${project}/`));
+
+const versions = [...new Set(projectAllDocs.map(d => {
+    const path = d.id.replace(/\\/g, '/');
+    const parts = path.split('/');
+    if (parts.length >= 3 && parts[1].startsWith('v')) {
+        return parts[1];
+    }
+    return String(d.data.version || 'v1.0');
+}))].sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
+
+const currentVersion = docs[0] ? (() => {
+    const path = docs[0].id.replace(/\\/g, '/');
+    const parts = path.split('/');
+    return (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (docs[0].data.version || 'v1.0');
+})() : 'v1.0';
+
+const firstDocOfVersion = [...docs].sort((a, b) => (a.data.order || 0) - (b.data.order || 0))[0];
+
+const getDocLink = (doc: any) => {
+    const path = doc.id.replace(/\\/g, '/');
+    const parts = path.split('/');
+    const v = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0');
+    const s = parts.length >= 3 
+      ? parts.slice(2).join('/').replace(/\.(md|mdx)$/, '')
+      : parts[parts.length - 1].replace(/\.(md|mdx)$/, '');
+	return `/docs/${project}/${v}/${s}`;
+};
+
+const getVersionLink = (ver: string) => `/docs/${project}/${ver}`;
+
+// --- Advanced Grouping Logic ---
+const sidebarGroups: { id: string; name: string | null; items: any[]; hasActive: boolean }[] = [];
+const groupsMap: Record<string, any[]> = {};
+const rootItems: any[] = [];
+
+docs.forEach(doc => {
+    const pathParts = doc.id.replace(/\\/g, '/').split('/');
+    const rest = pathParts.slice(2);
+    const isActive = currentSlug === doc.slug || (!currentSlug && doc.id === firstDocOfVersion?.id);
+    
+    if (rest.length > 1) {
+        const groupName = rest[0].replace(/-/g, ' ');
+        if (!groupsMap[groupName]) {
+            groupsMap[groupName] = [];
+        }
+        (doc as any)._isActive = isActive;
+        groupsMap[groupName].push(doc);
+    } else {
+        rootItems.push(doc);
+    }
+});
+
+if (rootItems.length > 0) {
+    sidebarGroups.push({ 
+        id: 'root',
+        name: null, 
+        items: rootItems,
+        hasActive: rootItems.some(d => d.slug === currentSlug)
+    });
+}
+
+Object.keys(groupsMap).forEach(groupName => {
+    sidebarGroups.push({ 
+        id: `${project}-${currentVersion}-${groupName.replace(/\s+/g, '-')}`,
+        name: groupName, 
+        items: groupsMap[groupName],
+        hasActive: groupsMap[groupName].some(d => d._isActive)
+    });
+});
+---
+
+<div id="sidebar-overlay" class="fixed inset-0 bg-midnight/80 backdrop-blur-sm z-[140] lg:hidden hidden transition-opacity duration-300"></div>
+
+<button id="sidebar-trigger" class="lg:hidden fixed bottom-6 right-6 z-[150] w-14 h-14 rounded-2xl bg-white text-black shadow-2xl flex items-center justify-center hover:bg-zinc-200 transition-all active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+  <i class="fa-solid fa-bars-staggered text-xl" id="trigger-icon"></i>
+</button>
+
+<aside id="main-sidebar" class="fixed lg:sticky top-0 left-0 z-[160] w-[280px] lg:w-64 h-full lg:h-screen bg-midnight lg:bg-transparent border-r border-border-muted py-12 px-6 lg:px-4 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 lg:transition-none scrollbar-hide flex flex-col">
+  
+  <div class="flex-shrink-0">
+    <div class="mb-10 px-2">
+            <a href="/docs" class="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-text-dim hover:text-white transition-colors group">
+              <i class="fa-solid fa-arrow-left-long transition-transform group-hover:-translate-x-1"></i>
+              Ecosystem Hub
+            </a>    </div>
+
+    <div class="mb-8 px-2">
+        <div class="flex items-center justify-between mb-6 opacity-40">
+            <h2 class="text-[9px] font-black uppercase tracking-[0.3em] flex items-center gap-2">
+                <i class="fa-solid fa-cube text-[10px]"></i>
+                Project
+            </h2>
+            <span class="text-[8px] font-black px-1.5 py-0.5 rounded border border-white/20 uppercase tracking-widest">{currentVersion}</span>
+        </div>
+        <div class="text-lg font-black uppercase tracking-tight truncate text-text-main mb-6">{project.replace(/-/g, ' ')}</div>
+        
+        <!-- Sidebar Filter -->
+        <div class="relative group mb-4">
+            <i class="fa-solid fa-filter absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-text-ghost group-focus-within:text-white transition-colors"></i>
+            <input 
+                type="text" 
+                id="sidebar-filter"
+                placeholder="Filter documentation..."
+                class="w-full bg-white/[0.03] border border-border-muted rounded-xl py-2 pl-8 pr-3 text-[11px] text-text-main placeholder:text-text-ghost focus:outline-none focus:border-white/20 focus:bg-white/[0.05] transition-all"
+            />
+        </div>
+
+        {versions.length > 1 && (
+        <div class="relative" id="version-selector">
+            <button id="version-trigger" class="w-full flex items-center justify-between bg-white/[0.03] border border-border-muted rounded-xl px-4 py-2.5 text-[11px] font-bold uppercase tracking-widest text-text-muted hover:bg-white/[0.06] transition-all active:scale-[0.98]">
+            <span class="flex items-center gap-2">
+                <i class="fa-solid fa-code-branch text-white opacity-40"></i>
+                Switch Version
+            </span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-text-dim"></i>
+            </button>
+            <div id="version-menu" class="absolute top-full left-0 w-full mt-2 bg-surface-mid border border-border-muted rounded-xl shadow-2xl overflow-hidden opacity-0 invisible translate-y-2 transition-all z-50 backdrop-blur-xl">
+            <div class="p-1">
+                {versions.map(ver => (
+                <a href={getVersionLink(ver)} class={`flex items-center justify-between px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${ver === currentVersion ? 'bg-white/10 text-white' : 'text-text-muted hover:bg-white/5 hover:text-white'}`}>
+                    {ver}
+                    {ver === currentVersion && <i class="fa-solid fa-check text-white"></i>}
+                </a>
+                ))}
+            </div>
+            </div>
+        </div>
+        )}
+    </div>
+  </div>
+
+  <!-- Scrollable Content Area -->
+  <div class="flex-1 space-y-8 overflow-y-auto scrollbar-hide py-4" id="sidebar-nav-container">
+    {sidebarGroups.map(group => (
+        <div class="px-2 sidebar-group" data-group-id={group.id} data-has-active={group.hasActive ? "true" : "false"}>
+            {group.name ? (
+                <button 
+                    class="sidebar-group-trigger w-full flex items-center justify-between text-[9px] font-black uppercase tracking-[0.3em] text-text-dim mb-4 group/trigger hover:text-white transition-colors"
+                >
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-folder-open text-[10px] opacity-30"></i>
+                        {group.name}
+                        <span class="text-[8px] opacity-30 ml-1">({group.items.length})</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down text-[8px] transition-transform duration-300"></i>
+                </button>
+            ) : null}
+            
+            <ul class="space-y-1 sidebar-group-content overflow-hidden">
+                {group.items.map((doc) => {
+                    const isActive = currentSlug === doc.slug || (!currentSlug && doc.id === firstDocOfVersion?.id);
+                    return (
+                        <li class="sidebar-item" data-title={doc.data.title.toLowerCase()}>
+                            <a href={getDocLink(doc)} class={`group flex items-center justify-between px-4 py-2.5 text-[11px] font-bold uppercase tracking-wider transition-all rounded-xl ${isActive ? 'bg-white/5 text-white border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.05)]' : 'text-text-muted hover:bg-white/[0.03] hover:text-text-main'}`}>
+                                <span class="truncate pr-4">{doc.data.title}</span>
+                                <i class={`fa-solid fa-chevron-right text-[8px] transition-all flex-shrink-0 ${isActive ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 group-hover:opacity-50 group-hover:translate-x-0'}`}></i>
+                            </a>
+                        </li>
+                    )
+                })}
+            </ul>
+        </div>
+    ))}
+  </div>
+</aside>
+
+<script is:inline>
+  function initSidebar() {
+    const trigger = document.getElementById('sidebar-trigger');
+    const sidebar = document.getElementById('main-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const icon = document.getElementById('trigger-icon');
+    let isOpen = false;
+
+    function toggleSidebar() {
+      isOpen = !isOpen;
+      if (isOpen) {
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+        icon.classList.replace('fa-bars-staggered', 'fa-xmark');
+        document.body.style.overflow = 'hidden';
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+        icon.classList.replace('fa-xmark', 'fa-bars-staggered');
+        document.body.style.overflow = '';
+      }
+    }
+
+    trigger?.addEventListener('click', toggleSidebar);
+    overlay?.addEventListener('click', toggleSidebar);
+
+    // Sidebar Filtering Logic
+    const filterInput = document.getElementById('sidebar-filter');
+    const sidebarGroups = document.querySelectorAll('.sidebar-group');
+    
+    filterInput?.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        
+        sidebarGroups.forEach(group => {
+            const items = group.querySelectorAll('.sidebar-item');
+            const groupTrigger = group.querySelector('.sidebar-group-trigger');
+            let hasVisibleItems = false;
+
+            items.forEach(item => {
+                const title = item.dataset.title;
+                if (title.includes(query)) {
+                    item.style.display = 'block';
+                    hasVisibleItems = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // If filtering, force expand groups that have matches
+            if (query !== "") {
+                if (hasVisibleItems) {
+                    group.style.display = 'block';
+                    group.setAttribute('data-state', 'open');
+                } else {
+                    group.style.display = 'none';
+                }
+            } else {
+                // Restore normal state when query is empty
+                group.style.display = 'block';
+                const groupId = group.dataset.groupId;
+                const hasActive = group.dataset.hasActive === 'true';
+                const savedState = localStorage.getItem(`sidebar-group-${groupId}`);
+                
+                let isExpanded = true;
+                if (hasActive) isExpanded = true;
+                else if (savedState !== null) isExpanded = savedState === 'open';
+                
+                group.setAttribute('data-state', isExpanded ? 'open' : 'closed');
+            }
+        });
+    });
+
+    // Group Collapse Logic
+    const groups = document.querySelectorAll('.sidebar-group');
+    
+    groups.forEach(group => {
+        const trigger = group.querySelector('.sidebar-group-trigger');
+        if (!trigger) return;
+
+        const groupId = group.dataset.groupId;
+        const hasActive = group.dataset.hasActive === 'true';
+        const savedState = localStorage.getItem(`sidebar-group-${groupId}`);
+        
+        let isExpanded = true;
+        if (hasActive) isExpanded = true;
+        else if (savedState !== null) isExpanded = savedState === 'open';
+
+        group.setAttribute('data-state', isExpanded ? 'open' : 'closed');
+
+        trigger.addEventListener('click', () => {
+            const currentState = group.getAttribute('data-state');
+            const newState = currentState === 'open' ? 'closed' : 'open';
+            
+            // Optional: Auto-collapse others (uncomment if desired)
+            /*
+            if (newState === 'open') {
+                groups.forEach(g => {
+                    if (g !== group && g.dataset.hasActive !== 'true') {
+                        g.setAttribute('data-state', 'closed');
+                    }
+                });
+            }
+            */
+
+            group.setAttribute('data-state', newState);
+            localStorage.setItem(`sidebar-group-${groupId}`, newState);
+        });
+    });
+
+    const vTrigger = document.getElementById('version-trigger');
+    const vMenu = document.getElementById('version-menu');
+    if (vTrigger && vMenu) {
+      vTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        vMenu.classList.toggle('opacity-0');
+        vMenu.classList.toggle('invisible');
+        vMenu.classList.toggle('translate-y-2');
+      });
+      document.addEventListener('click', () => {
+        vMenu.classList.add('opacity-0', 'invisible', 'translate-y-2');
+      });
+    }
+  }
+  
+  initSidebar();
+  document.addEventListener("astro:after-swap", initSidebar);
+</script>
+
+<style>
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  
+  .sidebar-group[data-state="closed"] .sidebar-group-content {
+    max-height: 0;
+    opacity: 0;
+    margin-bottom: 0;
+  }
+  
+  .sidebar-group[data-state="open"] .sidebar-group-content {
+    max-height: 2000px;
+    opacity: 1;
+    margin-bottom: 1rem;
+  }
+
+  .sidebar-group .sidebar-group-content {
+    transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, margin 0.3s ease;
+  }
+  
+  .sidebar-group[data-state="open"] .sidebar-group-trigger i.fa-chevron-down {
+    transform: rotate(180deg);
+  }
+
+  .sidebar-group-trigger i.fa-chevron-down {
+    transition: transform 0.3s ease;
+  }
+</style>

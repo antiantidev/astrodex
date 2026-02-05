@@ -1,0 +1,90 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import EcosystemHero from '../../components/docs/EcosystemHero.astro';
+import { SITE_CONFIG } from '../../site.config';
+
+const allDocs = await getCollection('docs');
+const projectIds = [...new Set(allDocs.map(doc => doc.id.replace(/\\/g, '/').split('/')[0]))];
+
+const projectList = await Promise.all(projectIds.map(async (id) => {
+    const docs = allDocs.filter(d => d.id.replace(/\\/g, '/').startsWith(`${id}/`));
+    const metadata = docs.find(d => d.id.replace(/\\/g, '/').endsWith('project.metadata.md'));
+    const versionDocs = docs.filter(d => !d.id.replace(/\\/g, '/').endsWith('project.metadata.md'));
+    
+    const versions = [...new Set(versionDocs.map(d => {
+        const path = d.id.replace(/\\/g, '/');
+        const parts = path.split('/');
+        if (parts.length >= 3 && parts[1].startsWith('v')) {
+            return parts[1];
+        }
+        return String(d.data.version || 'v1.0.1');
+    }))].sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
+
+    const latestVersion = versions[0] || 'v1.0.1';
+    const projectName = metadata?.data?.title || id.replace(/-/g, ' ').toUpperCase();
+    const description = metadata?.data?.description || `Project documentation for ${projectName}.`;
+
+    return {
+        id,
+        name: projectName,
+        description,
+        link: `/docs/${id}`,
+        docCount: versionDocs.length,
+        versions,
+        latestVersion
+    };
+}));
+---
+
+<Layout title={`Ecosystem | ${SITE_CONFIG.brand.name}`}>
+	<EcosystemHero />
+
+	<div class="py-16 md:py-24">
+		<div class="container mx-auto px-6">
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10" id="projects-grid">
+				{projectList.map(project => (
+					<div class="project-card-wrapper" data-name={project.name.toLowerCase()} data-desc={project.id.toLowerCase()}>
+                        <ProjectCard 
+                            name={project.name}
+                            description={project.description}
+                            href={project.link}
+                            count={project.docCount}
+                            versions={project.versions as string[]}
+                            currentVersion={project.latestVersion as string}
+                        />
+                    </div>
+				))}
+			</div>
+
+            {projectList.length === 0 && (
+                <div class="py-24 text-center">
+                    <div class="w-16 h-16 rounded-2xl bg-white/5 border border-border-muted flex items-center justify-center text-text-dim mx-auto mb-6">
+                        <i class="fa-solid fa-folder-open text-2xl"></i>
+                    </div>
+                    <h3 class="text-text-main font-black text-lg uppercase tracking-tight">No projects discovered</h3>
+                    <p class="text-text-muted text-sm mt-2 font-light italic">Time to start building your knowledge base.</p>
+                </div>
+            )}
+		</div>
+	</div>
+</Layout>
+
+<script is:inline>
+    const searchInput = document.getElementById('project-search');
+    const cards = document.querySelectorAll('.project-card-wrapper');
+
+    searchInput?.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        cards.forEach(card => {
+            const name = card.getAttribute('data-name');
+            const desc = card.getAttribute('data-desc');
+            if (name.includes(query) || desc.includes(query)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+</script>

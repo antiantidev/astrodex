@@ -1,0 +1,57 @@
+---
+import { SITE_CONFIG } from '../site.config';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  canonicalURL?: URL | string;
+  type?: 'website' | 'article';
+}
+
+const {
+  title,
+  description = SITE_CONFIG.brand.description,
+  image = SITE_CONFIG.seo.ogImage,
+  canonicalURL,
+  type = 'website'
+} = Astro.props;
+
+const siteName = SITE_CONFIG.brand.name;
+const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
+---
+
+<!-- Global Metadata -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="generator" content={Astro.generator} />
+
+<!-- Canonical URL -->
+{canonicalURL && <link rel="canonical" href={canonicalURL} />}
+
+<!-- Primary Meta Tags -->
+<title>{fullTitle}</title>
+<meta name="title" content={fullTitle} />
+<meta name="description" content={description} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content={type} />
+<meta property="og:url" content={Astro.url} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={new URL(image, Astro.url)} />
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content={Astro.url} />
+<meta property="twitter:title" content={fullTitle} />
+<meta property="twitter:description" content={description} />
+<meta property="twitter:image" content={new URL(image, Astro.url)} />
+
+<!-- Robots -->
+<meta name="robots" content="index, follow" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+
+<!-- Theme Color for Mobile Browsers -->
+<meta name="theme-color" content="#000000" />
