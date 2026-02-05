@@ -2,8 +2,10 @@
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import Hero from '../components/home/Hero.astro';
+import QuickStart from '../components/home/QuickStart.astro';
 import TechStack from '../components/home/TechStack.astro';
 import ProjectsShowcase from '../components/home/ProjectsShowcase.astro';
+import Comparison from '../components/home/Comparison.astro';
 import Features from '../components/home/Features.astro';
 import Workflow from '../components/home/Workflow.astro';
 import FAQ from '../components/home/FAQ.astro';
@@ -49,8 +51,10 @@ const lighthouseScore = "100";
     description="Host unlimited documentation projects for free with Astrodex. A high-performance, SEO-optimized, and monochromatic documentation engine for modern developers."
 >
 	<Hero />
+    <QuickStart />
     <TechStack />
     <ProjectsShowcase featuredProjects={featuredProjects} />
+    <Comparison />
 	<Features />
     <Workflow />
     <FAQ />

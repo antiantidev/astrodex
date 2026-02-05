@@ -1,0 +1,70 @@
+---
+const comparisons = [
+    {
+        feature: "Performance",
+        astrodex: "100/100 (Zero-JS)",
+        docusaurus: "Moderate (React Hydration)",
+        docsify: "Slow (Runtime Parsing)"
+    },
+    {
+        feature: "Multi-Project",
+        astrodex: "Native Support",
+        docusaurus: "Plugin Required",
+        docsify: "Manual Config"
+    },
+    {
+        feature: "Design",
+        astrodex: "Premium Monochromatic",
+        docusaurus: "Standard Wiki-style",
+        docsify: "Minimalistic"
+    },
+    {
+        feature: "Versioning",
+        astrodex: "Automatic Folders",
+        docusaurus: "Complex JSON Config",
+        docsify: "Not Native"
+    }
+];
+---
+
+<section class="py-24 border-t border-border-subtle bg-white/[0.01]">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16 md:mb-20">
+            <h2 class="text-[10px] font-black uppercase tracking-[0.4em] text-text-dim mb-4">Benchmarking</h2>
+            <p class="text-2xl md:text-3xl lg:text-4xl font-black text-text-main tracking-tighter uppercase">Why Astrodex Wins.</p>
+        </div>
+
+        <div class="max-w-5xl mx-auto overflow-x-auto">
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="border-b border-border-muted text-[10px] font-black uppercase tracking-widest text-text-dim">
+                        <th class="py-6 px-4 text-left">Core Engine</th>
+                        <th class="py-6 px-4 text-center text-white">Astrodex</th>
+                        <th class="py-6 px-4 text-center">Docusaurus</th>
+                        <th class="py-6 px-4 text-center">Docsify</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-border-subtle">
+                    {comparisons.map(c => (
+                        <tr class="group hover:bg-white/[0.02] transition-colors">
+                            <td class="py-6 px-4 text-xs font-black uppercase tracking-tight text-text-muted group-hover:text-white transition-colors">{c.feature}</td>
+                            <td class="py-6 px-4 text-center">
+                                <span class="inline-block px-3 py-1 rounded-full bg-white/10 text-white text-[10px] font-black uppercase tracking-tighter border border-white/20">
+                                    {c.astrodex}
+                                </span>
+                            </td>
+                            <td class="py-6 px-4 text-center text-[11px] text-text-dim font-light">{c.docusaurus}</td>
+                            <td class="py-6 px-4 text-center text-[11px] text-text-dim font-light">{c.docsify}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-16 text-center">
+            <p class="text-xs text-text-muted font-light italic opacity-60">
+                * Based on internal technical analysis and default lighthouse benchmarks.
+            </p>
+        </div>
+    </div>
+</section>
