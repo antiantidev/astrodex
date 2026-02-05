@@ -1,12 +1,12 @@
 ---
 import { SITE_CONFIG } from '../../site.config';
-import { getRelativeUrl } from '../../utils/url';
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <div class="pt-24 md:pt-32 pb-16 md:pb-24 border-b border-border-subtle bg-midnight">
     <div class="container mx-auto px-6">
         <nav class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-text-dim mb-8">
-            <a href={getRelativeUrl("/")} class="hover:text-white transition-colors">Home</a>
+            <a href={baseUrl} class="hover:text-white transition-colors">Home</a>
             <span class="text-border-muted">/</span>
             <span class="text-white">Eco System</span>
         </nav>
@@ -24,7 +24,7 @@ import { getRelativeUrl } from '../../utils/url';
                 type="text" 
                 id="project-search"
                 placeholder="Filter ecosystem..." 
-                class="w-full bg-white/[0.03] border border-border-muted rounded-xl py-3.5 md:py-4 pl-12 pr-4 text-xs text-text-main placeholder:text-text-dim focus:outline-none focus:border-white/20 focus:bg-white/[0.05] transition-all uppercase tracking-widest font-bold"
+                class="w-full bg-white/[0.03] border border-border-muted rounded-2xl py-3.5 md:py-4 pl-12 pr-4 text-xs text-text-main placeholder:text-text-dim focus:outline-none focus:border-white/20 focus:bg-white/[0.05] transition-all uppercase tracking-widest font-bold"
             />
         </div>
     </div>

@@ -1,6 +1,4 @@
 ---
-import { getRelativeUrl } from "../../utils/url";
-
 interface Props {
   items: {
     label: string;
@@ -12,6 +10,7 @@ interface Props {
 }
 
 const { items, className = "" } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <nav class={`flex items-center flex-wrap gap-y-2.5 gap-x-2 text-[13px] md:text-[14px] font-medium text-text-dim leading-snug ${className}`}>
@@ -19,7 +18,7 @@ const { items, className = "" } = Astro.props;
     <div class="flex items-center gap-2">
       {index > 0 && <span class="text-border-muted flex-shrink-0 opacity-40">/</span>}
       {item.href ? (
-        <a href={getRelativeUrl(item.href)} class="hover:text-white transition-colors flex items-center gap-1.5 whitespace-nowrap flex-shrink-0 py-1">
+        <a href={`${baseUrl}${item.href.replace(/^\//, "")}`} class="hover:text-white transition-colors flex items-center gap-1.5 whitespace-nowrap flex-shrink-0 py-1">
           {item.icon && <i class={item.icon + " text-[14px] md:text-[15px] opacity-70"}></i>}
           <span class="tracking-tight">{item.label}</span>
         </a>

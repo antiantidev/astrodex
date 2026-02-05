@@ -2,7 +2,6 @@
 import { getCollection } from "astro:content";
 import Layout from "../../../layouts/Layout.astro";
 import { SITE_CONFIG } from "../../../site.config";
-import { getRelativeUrl } from "../../../utils/url";
 
 export async function getStaticPaths() {
   const allDocs = await getCollection("docs");
@@ -57,8 +56,9 @@ const description =
   projectMetadata?.data?.description ||
   `Explore documentation for ${projectName}.`;
 
+const baseUrl = import.meta.env.BASE_URL;
 const getFirstDocLink = (ver: string) => {
-  return getRelativeUrl(`/docs/${project}/${ver}`);
+  return `${baseUrl}docs/${project}/${ver}`;
 };
 ---
 
@@ -66,9 +66,9 @@ const getFirstDocLink = (ver: string) => {
   <div class="pt-32 pb-24 border-b border-border-subtle">
     <div class="container mx-auto px-6">
       <nav class="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-text-dim mb-8">
-        <a href={getRelativeUrl("/")} class="hover:text-text-main transition-colors">Home</a>
+        <a href={baseUrl} class="hover:text-text-main transition-colors">Home</a>
         <span class="text-border-muted">/</span>
-        <a href={getRelativeUrl("/docs")} class="hover:text-text-main transition-colors">Ecosystem</a>
+        <a href={`${baseUrl}docs`} class="hover:text-text-main transition-colors">Ecosystem</a>
         <span class="text-border-muted">/</span>
         <span class="text-text-main">{project}</span>
       </nav>
@@ -145,7 +145,7 @@ const getFirstDocLink = (ver: string) => {
             <i class="fa-brands fa-github absolute -bottom-4 -right-4 text-8xl text-white opacity-5"></i>
             <h3 class="text-sm font-bold text-white mb-4 uppercase tracking-widest">Want to help?</h3>
             <p class="text-xs text-text-muted leading-relaxed mb-6 font-light">This project is open-source. You can improve this documentation by submitting a Pull Request on GitHub.</p>
-            <a href={`${SITE_CONFIG.links.github}/blob/main/src/content/docs/${project}/project.metadata.md`} target="_blank" class="block w-full py-3 rounded-xl bg-white text-black text-center text-[10px] font-black uppercase tracking-widest hover:bg-zinc-200 transition-all shadow-lg shadow-white/5">
+            <a href={`${SITE_CONFIG.brand.links?.github || 'https://github.com/antiantidev/crefinity-doc'}/blob/main/src/content/docs/${project}/project.metadata.md`} target="_blank" class="block w-full py-3 rounded-xl bg-white text-black text-center text-[10px] font-black uppercase tracking-widest hover:bg-zinc-200 transition-all shadow-lg shadow-white/5">
               Edit Metadata
             </a>
           </div>

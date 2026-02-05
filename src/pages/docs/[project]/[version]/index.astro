@@ -1,6 +1,5 @@
 ---
 import { getCollection } from 'astro:content';
-import { getRelativeUrl } from '../../../../utils/url';
 
 export async function getStaticPaths() {
   const allDocs = await getCollection('docs');
@@ -40,9 +39,10 @@ const versionDocs = allDocs
   .sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
 
 const firstDoc = versionDocs[0];
+const baseUrl = import.meta.env.BASE_URL;
 
 if (!firstDoc) {
-  return Astro.redirect(getRelativeUrl('/docs'));
+  return Astro.redirect(`${baseUrl}docs`);
 }
 
 const parts = firstDoc.id.replace(/\\/g, '/').split('/');
@@ -50,5 +50,5 @@ const slug = parts.length >= 3
   ? parts.slice(2).join('/').replace(/\.(md|mdx)$/, '')
   : parts[parts.length - 1].replace(/\.(md|mdx)$/, '');
 
-return Astro.redirect(getRelativeUrl(`/docs/${project}/${version}/${slug}`));
+return Astro.redirect(`${baseUrl}docs/${project}/${version}/${slug}`);
 ---

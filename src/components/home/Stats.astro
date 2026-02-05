@@ -1,6 +1,5 @@
 ---
 import { SITE_CONFIG } from "../../site.config";
-import { getRelativeUrl } from "../../utils/url";
 
 interface Props {
   totalProjects: number;
@@ -11,6 +10,7 @@ interface Props {
 
 const { totalProjects, totalArticles, lighthouseScore, buildTime } =
   Astro.props;
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <section class="py-12 md:py-16 border-t border-border-muted">
@@ -111,7 +111,7 @@ const { totalProjects, totalArticles, lighthouseScore, buildTime } =
             <i class="fa-brands fa-github text-sm"></i> Use Template
           </a>
           <a
-            href={getRelativeUrl("/docs/astrodex-base/v1.0.1/getting-started/contribution-flow")}
+            href={`${baseUrl}docs/astrodex-base/v1.0.1/getting-started/contribution-flow`}
             class="px-8 py-3 rounded-full border border-white/10 text-text-main text-[10px] font-black uppercase tracking-[0.2em] hover:bg-white/5 transition-all flex items-center gap-3"
           >
             Setup Guide
