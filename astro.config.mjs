@@ -5,7 +5,8 @@ import { remarkReadingTime } from "./src/scripts/remark-reading-time.mjs";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://antiantidev.github.io/astrodex",
+  site: "https://antiantidev.github.io",
+  base: "/astrodex",
   integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()],
