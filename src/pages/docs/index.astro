@@ -20,10 +20,10 @@ const projectList = await Promise.all(projectIds.map(async (id) => {
         if (parts.length >= 3 && parts[1].startsWith('v')) {
             return parts[1];
         }
-        return String(d.data.version || 'v1.0.1');
+        return String(d.data.version || 'v1.0');
     }))].sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
 
-    const latestVersion = versions[0] || 'v1.0.1';
+    const latestVersion = versions[0] || 'v1.0';
     const projectName = metadata?.data?.title || id.replace(/-/g, ' ').toUpperCase();
     const description = metadata?.data?.description || `Project documentation for ${projectName}.`;
 
@@ -31,7 +31,7 @@ const projectList = await Promise.all(projectIds.map(async (id) => {
         id,
         name: projectName,
         description,
-        link: `/docs/${id}`,
+        link: `/docs/${id}/`,
         docCount: versionDocs.length,
         versions,
         latestVersion

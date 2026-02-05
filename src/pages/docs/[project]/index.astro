@@ -44,7 +44,7 @@ const versions = [
       if (parts.length >= 3 && parts[1].startsWith('v')) {
         return parts[1];
       }
-      return String(d.data.version || "v1.0.1");
+      return String(d.data.version || "v1.0");
     }),
   ),
 ].sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
@@ -64,7 +64,7 @@ versions.forEach(ver => {
         const path = d.id.replace(/\\/g, '/');
         const parts = path.split('/');
         const docProject = parts[0];
-        const docVersion = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (d.data.version || 'v1.0.1');
+        const docVersion = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (d.data.version || 'v1.0');
         return docProject === project && docVersion === ver;
     }).sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
 
@@ -74,9 +74,14 @@ versions.forEach(ver => {
         const slug = parts.length >= 3 
             ? parts.slice(2).join('/').replace(/\.(md|mdx)$/, '')
             : parts[parts.length - 1].replace(/\.(md|mdx)$/, '');
-        versionFirstDocMap[ver] = `/docs/${project}/${ver}/${slug}`;
+        
+        // Ensure the link goes directly to the slug and has a trailing slash to prevent server-side redirects
+        // If the slug is 'index', we still want to go to a specific page if possible, 
+        // but if it's the only page, we point to the version root with a trailing slash.
+        const finalSlug = slug === 'index' ? '' : slug;
+        versionFirstDocMap[ver] = `/docs/${project}/${ver}/${finalSlug}${finalSlug ? '/' : ''}`;
     } else {
-        versionFirstDocMap[ver] = `/docs/${project}/${ver}`; // Fallback
+        versionFirstDocMap[ver] = `/docs/${project}/${ver}/`; // Fallback with trailing slash
     }
 });
 
@@ -91,7 +96,7 @@ const getFirstDocHref = (ver: string) => {
       <nav class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-text-dim mb-8">
         <Link href="/" class="hover:text-text-main transition-colors">Home</Link>
         <span class="text-border-muted">/</span>
-        <Link href="/docs" class="hover:text-text-main transition-colors">Ecosystem</Link>
+        <Link href="/docs/" class="hover:text-text-main transition-colors">Ecosystem</Link>
         <span class="text-border-muted">/</span>
         <span class="text-text-main">{project}</span>
       </nav>

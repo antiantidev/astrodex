@@ -26,14 +26,14 @@ const featuredProjects = projectNames.slice(0, 3).map(id => {
         if (parts.length >= 3 && parts[1].startsWith('v')) {
             return parts[1];
         }
-        return String(d.data.version || 'v1.0.1');
+        return String(d.data.version || 'v1.0');
     }))].sort().reverse();
 	const latestVersion = versions[0];
 	
 	return {
 		id,
 		name: id.replace('-', ' ').toUpperCase(),
-		link: `/docs/${id}`,
+		link: `/docs/${id}/`,
 		docCount: projectDocs.length,
 		versions: versions,
 		latestVersion: latestVersion

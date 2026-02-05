@@ -11,7 +11,7 @@ export async function getStaticPaths() {
     const parts = path.split('/');
     if (parts.length >= 2) {
       const project = parts[0];
-      const version = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0.1');
+      const version = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0');
       combinations.add(`${project}|${version}`);
     }
   });
@@ -33,7 +33,7 @@ const versionDocs = allDocs
     const path = doc.id.replace(/\\/g, '/');
     const parts = path.split('/');
     const docProject = parts[0];
-    const docVersion = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0.1');
+    const docVersion = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0');
     return docProject === project && docVersion === version && !path.endsWith('project.metadata.md');
   })
   .sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
@@ -42,7 +42,7 @@ const firstDoc = versionDocs[0];
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 if (!firstDoc) {
-  return Astro.redirect(`${baseUrl}/docs`);
+  return Astro.redirect(`${baseUrl}/docs/`);
 }
 
 const parts = firstDoc.id.replace(/\\/g, '/').split('/');
@@ -50,5 +50,6 @@ const slug = parts.length >= 3
   ? parts.slice(2).join('/').replace(/\.(md|mdx)$/, '')
   : parts[parts.length - 1].replace(/\.(md|mdx)$/, '');
 
-return Astro.redirect(`${baseUrl}/docs/${project}/${version}/${slug}`);
+const finalSlug = slug === 'index' ? '' : slug;
+return Astro.redirect(`${baseUrl}/docs/${project}/${version}/${finalSlug}${finalSlug ? '/' : ''}`);
 ---
