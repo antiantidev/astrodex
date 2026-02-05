@@ -97,7 +97,7 @@ const getDocLink = (doc: any) => {
     ? parts.slice(2).join('/').replace(/\.(md|mdx)$/, '')
     : parts[parts.length - 1].replace(/\.(md|mdx)$/, '');
 
-  return `${baseUrl}/docs/${p}/${v}/${s}/`;
+  return `/docs/${p}/${v}/${s}/`;
 };
 ---
 
