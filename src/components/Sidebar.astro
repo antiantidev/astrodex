@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { getRelativeUrl } from '../utils/url';
 
 interface Props {
   project: string;
@@ -18,28 +19,28 @@ const versions = [...new Set(projectAllDocs.map(d => {
     if (parts.length >= 3 && parts[1].startsWith('v')) {
         return parts[1];
     }
-    return String(d.data.version || 'v1.0');
+    return String(d.data.version || 'v1.0.1');
 }))].sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
 
 const currentVersion = docs[0] ? (() => {
     const path = docs[0].id.replace(/\\/g, '/');
     const parts = path.split('/');
-    return (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (docs[0].data.version || 'v1.0');
-})() : 'v1.0';
+    return (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (docs[0].data.version || 'v1.0.1');
+})() : 'v1.0.1';
 
 const firstDocOfVersion = [...docs].sort((a, b) => (a.data.order || 0) - (b.data.order || 0))[0];
 
 const getDocLink = (doc: any) => {
     const path = doc.id.replace(/\\/g, '/');
     const parts = path.split('/');
-    const v = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0');
+    const v = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0.1');
     const s = parts.length >= 3 
       ? parts.slice(2).join('/').replace(/\.(md|mdx)$/, '')
       : parts[parts.length - 1].replace(/\.(md|mdx)$/, '');
-	return `/docs/${project}/${v}/${s}`;
+	return getRelativeUrl(`/docs/${project}/${v}/${s}`);
 };
 
-const getVersionLink = (ver: string) => `/docs/${project}/${ver}`;
+const getVersionLink = (ver: string) => getRelativeUrl(`/docs/${project}/${ver}`);
 
 // --- Advanced Grouping Logic ---
 const sidebarGroups: { id: string; name: string | null; items: any[]; hasActive: boolean }[] = [];
@@ -88,14 +89,15 @@ Object.keys(groupsMap).forEach(groupName => {
   <i class="fa-solid fa-bars-staggered text-xl" id="trigger-icon"></i>
 </button>
 
-<aside id="main-sidebar" class="fixed lg:sticky top-0 left-0 z-[160] w-[280px] lg:w-64 h-full lg:h-screen bg-midnight lg:bg-transparent border-r border-border-muted py-12 px-6 lg:px-4 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 lg:transition-none scrollbar-hide flex flex-col">
+<aside id="main-sidebar" class="fixed lg:sticky top-0 left-0 z-[160] w-[280px] lg:w-64 h-full lg:h-screen bg-midnight lg:bg-transparent border-r border-border-muted py-12 px-6 lg:px-4 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 lg:translate-none scrollbar-hide flex flex-col">
   
   <div class="flex-shrink-0">
     <div class="mb-10 px-2">
-            <a href="/docs" class="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-text-dim hover:text-white transition-colors group">
-              <i class="fa-solid fa-arrow-left-long transition-transform group-hover:-translate-x-1"></i>
-              Ecosystem Hub
-            </a>    </div>
+        <a href={getRelativeUrl("/docs")} class="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-text-dim hover:text-white transition-colors group">
+        <i class="fa-solid fa-arrow-left-long transition-transform group-hover:-translate-x-1"></i>
+        Ecosystem Hub
+        </a>
+    </div>
 
     <div class="mb-8 px-2">
         <div class="flex items-center justify-between mb-6 opacity-40">
@@ -269,18 +271,6 @@ Object.keys(groupsMap).forEach(groupName => {
         trigger.addEventListener('click', () => {
             const currentState = group.getAttribute('data-state');
             const newState = currentState === 'open' ? 'closed' : 'open';
-            
-            // Optional: Auto-collapse others (uncomment if desired)
-            /*
-            if (newState === 'open') {
-                groups.forEach(g => {
-                    if (g !== group && g.dataset.hasActive !== 'true') {
-                        g.setAttribute('data-state', 'closed');
-                    }
-                });
-            }
-            */
-
             group.setAttribute('data-state', newState);
             localStorage.setItem(`sidebar-group-${groupId}`, newState);
         });

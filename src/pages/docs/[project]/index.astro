@@ -1,8 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../../../layouts/Layout.astro";
-
 import { SITE_CONFIG } from "../../../site.config";
+import { getRelativeUrl } from "../../../utils/url";
 
 export async function getStaticPaths() {
   const allDocs = await getCollection("docs");
@@ -58,7 +58,7 @@ const description =
   `Explore documentation for ${projectName}.`;
 
 const getFirstDocLink = (ver: string) => {
-  return `/docs/${project}/${ver}`;
+  return getRelativeUrl(`/docs/${project}/${ver}`);
 };
 ---
 
@@ -66,9 +66,9 @@ const getFirstDocLink = (ver: string) => {
   <div class="pt-32 pb-24 border-b border-border-subtle">
     <div class="container mx-auto px-6">
       <nav class="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-text-dim mb-8">
-        <a href="/" class="hover:text-text-main transition-colors">Home</a>
+        <a href={getRelativeUrl("/")} class="hover:text-text-main transition-colors">Home</a>
         <span class="text-border-muted">/</span>
-        <a href="/docs" class="hover:text-text-main transition-colors">Ecosystem</a>
+        <a href={getRelativeUrl("/docs")} class="hover:text-text-main transition-colors">Ecosystem</a>
         <span class="text-border-muted">/</span>
         <span class="text-text-main">{project}</span>
       </nav>

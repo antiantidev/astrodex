@@ -1,6 +1,6 @@
----
 import Search from "./Search.astro";
 import { SITE_CONFIG } from "../site.config";
+import { getRelativeUrl } from "../utils/url";
 
 const { pathname } = Astro.url;
 const normalizedPath = pathname.replace(/\/$/, "");
@@ -28,7 +28,7 @@ const socialLinks = [
   >
     <!-- Logo Section -->
     <div class="flex items-center">
-      <a href="/" class="group flex items-center gap-2 md:gap-3">
+      <a href={getRelativeUrl("/")} class="group flex items-center gap-2 md:gap-3">
         <div
           class="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:border-white group-hover:scale-110 transition-all duration-500"
         >
@@ -57,12 +57,13 @@ const socialLinks = [
     >
       {
         navItems.map((item) => {
+          const itemHref = getRelativeUrl(item.href);
           const isActive =
-            normalizedPath === item.href ||
-            (item.href !== "/" && normalizedPath.startsWith(item.href));
+            normalizedPath === itemHref ||
+            (item.href !== "/" && normalizedPath.startsWith(itemHref));
           return (
             <a
-              href={item.href}
+              href={itemHref}
               class={`nav-link-desktop ${isActive ? "active" : ""}`}
             >
               <span class="relative z-10">{item.name}</span>
@@ -118,12 +119,13 @@ const socialLinks = [
       </p>
       {
         navItems.map((item) => {
+          const itemHref = getRelativeUrl(item.href);
           const isActive =
-            normalizedPath === item.href ||
-            (item.href !== "/" && normalizedPath.startsWith(item.href));
+            normalizedPath === itemHref ||
+            (item.href !== "/" && normalizedPath.startsWith(itemHref));
           return (
             <a
-              href={item.href}
+              href={itemHref}
               class={`nav-link-mobile ${isActive ? "active" : ""}`}
             >
               <span class="text-lg font-black uppercase tracking-widest">
