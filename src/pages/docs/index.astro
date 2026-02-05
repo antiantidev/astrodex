@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import EcosystemHero from '../../components/docs/EcosystemHero.astro';
+import Link from '../../components/ui/Link.astro';
 import { SITE_CONFIG } from '../../site.config';
 
 const allDocs = await getCollection('docs');

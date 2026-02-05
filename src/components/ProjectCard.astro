@@ -1,4 +1,6 @@
 ---
+import Link from "./ui/Link.astro";
+
 interface Props {
   name: string;
   description: string;
@@ -9,19 +11,17 @@ interface Props {
 }
 
 const { name, description, href, count, versions = [], currentVersion } = Astro.props;
-const baseUrl = import.meta.env.BASE_URL;
-const safeHref = href.startsWith(baseUrl) ? href : `${baseUrl}${href.replace(/^\//, "")}`;
 ---
 
 <div class="premium-card group relative flex flex-col p-8">
   <div class="flex flex-col h-full">
     <div class="flex justify-between items-start mb-4">
-      <a href={safeHref} class="flex-1">
+      <Link href={href} class="flex-1">
         <h3 class="text-sm font-black tracking-widest uppercase text-text-main group-hover:text-white transition-colors flex items-center gap-2">
           <i class="fa-solid fa-layer-group text-white/30 text-xs"></i>
           {name}
         </h3>
-      </a>
+      </Link>
       <span class="text-[10px] px-2 py-1 rounded-full border border-border-muted text-text-muted uppercase tracking-tighter flex items-center gap-1.5">
         <i class="fa-regular fa-file-lines text-[9px]"></i>
         {count} Docs
@@ -52,10 +52,10 @@ const safeHref = href.startsWith(baseUrl) ? href : `${baseUrl}${href.replace(/^\
     )}
 
     <div class="mt-auto pt-4 flex items-center justify-between">
-      <a href={safeHref} class="flex items-center text-[10px] font-black uppercase tracking-widest text-white opacity-100 lg:opacity-0 group-hover:opacity-100 transition-all lg:-translate-x-2 group-hover:translate-x-0 gap-2">
+      <Link href={href} class="flex items-center text-[10px] font-black uppercase tracking-widest text-white opacity-100 lg:opacity-0 group-hover:opacity-100 transition-all lg:-translate-x-2 group-hover:translate-x-0 gap-2">
         Enter Documentation 
         <i class="fa-solid fa-arrow-right-long transition-transform group-hover:translate-x-1"></i>
-      </a>
+      </Link>
     </div>
   </div>
 </div>

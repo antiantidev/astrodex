@@ -1,5 +1,6 @@
 ---
 import ProjectCard from '../ProjectCard.astro';
+import Link from '../ui/Link.astro';
 
 interface Props {
     featuredProjects: any[];
@@ -12,17 +13,17 @@ const { featuredProjects } = Astro.props;
     <div class="container mx-auto px-6">
         <div class="flex flex-col md:flex-row justify-between items-center md:items-end mb-16 gap-8 text-center md:text-left">
             <div>
-                <h2 class="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500 mb-4">Live Ecosystem</h2>
-                <p class="text-3xl lg:text-4xl font-extrabold text-text-main tracking-tight">Recently Added Projects</p>
+                <h2 class="text-[10px] font-bold uppercase tracking-[0.4em] text-text-dim mb-4 opacity-40">Live Ecosystem</h2>
+                <p class="text-3xl lg:text-4xl font-black text-text-main tracking-tighter uppercase">Recently Added.</p>
             </div>
-            <a href="/docs" class="text-xs font-bold uppercase tracking-widest text-text-dim hover:text-white transition-colors border-b border-border-muted pb-1">View All Projects <i class="fa-solid fa-arrow-right ml-2 text-[10px]"></i></a>
+            <Link href="/docs" class="text-xs font-bold uppercase tracking-widest text-text-dim hover:text-white transition-colors border-b border-border-muted pb-1">View All Projects <i class="fa-solid fa-arrow-right ml-2 text-[10px]"></i></Link>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
             {featuredProjects.map(project => (
                 <ProjectCard 
                     name={project.name}
-                    description={`Explore the documentation for ${project.name}, automatically synchronized via our contribution pipeline.`}
+                    description={`Explore the documentation for ${project.name}, automatically synchronized via our technical pipeline.`}
                     href={project.link}
                     count={project.docCount}
                     versions={project.versions}

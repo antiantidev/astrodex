@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { SITE_CONFIG } from '../site.config';
-import { getRelativeUrl } from '../utils/url';
+import Link from '../components/ui/Link.astro';
 ---
 
 <Layout title={`404 - Lost in Space | ${SITE_CONFIG.brand.name}`}>
@@ -24,12 +24,12 @@ import { getRelativeUrl } from '../utils/url';
             </p>
 
             <div class="flex flex-wrap justify-center gap-4">
-                <a href={getRelativeUrl("/")} class="px-8 py-3 rounded-full bg-white text-black text-xs font-black uppercase tracking-[0.2em] hover:bg-zinc-200 transition-all shadow-[0_0_20px_var(--color-glow)]">
+                <Link href="/" class="px-8 py-3 rounded-full bg-white text-black text-xs font-black uppercase tracking-[0.2em] hover:bg-zinc-200 transition-all shadow-[0_0_20px_var(--color-glow)]">
                     Return Base
-                </a>
-                <a href={getRelativeUrl("/docs")} class="px-8 py-3 rounded-full border border-border-muted text-text-dim text-xs font-black uppercase tracking-[0.2em] hover:bg-white/5 hover:text-text-main transition-all">
+                </Link>
+                <Link href="/docs" class="px-8 py-3 rounded-full border border-border-muted text-text-dim text-xs font-black uppercase tracking-[0.2em] hover:bg-white/5 hover:text-text-main transition-all">
                     Search Ecosystem
-                </a>
+                </Link>
             </div>
         </div>
     </div>

@@ -192,15 +192,15 @@ const baseUrl = import.meta.env.BASE_URL;
       <a href="${item.href}" class="flex flex-col gap-2 p-4 rounded-2xl hover:bg-white/[0.03] border border-transparent hover:border-white/5 group transition-all mb-1">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="text-[9px] font-black uppercase tracking-widest ${item.project.toLowerCase() === currentProject?.toLowerCase() ? 'text-white' : 'text-slate-500'}">${item.project}</span>
-            <span class="w-1 h-1 rounded-full bg-slate-800"></span>
-            <span class="text-[9px] font-bold text-slate-600 uppercase tracking-widest">${item.version}</span>
+            <span class="text-[9px] font-black uppercase tracking-widest ${item.project.toLowerCase() === currentProject?.toLowerCase() ? 'text-white' : 'text-text-dim'}">${item.project}</span>
+            <span class="w-1 h-1 rounded-full bg-zinc-800"></span>
+            <span class="text-[9px] font-bold text-text-dim uppercase tracking-widest">${item.version}</span>
           </div>
-          <i class="fa-solid fa-arrow-right text-[10px] text-slate-800 group-hover:text-white transition-colors"></i>
+          <i class="fa-solid fa-arrow-right text-[10px] text-text-ghost group-hover:text-white transition-colors"></i>
         </div>
         <div>
-          <div class="text-sm font-bold text-white group-hover:text-white transition-colors mb-1">${item.title}</div>
-          <div class="text-[11px] text-slate-500 line-clamp-1 font-medium leading-relaxed">${item.description || item.content}</div>
+          <div class="text-sm font-bold text-white group-hover:text-white transition-colors mb-1 uppercase tracking-tight">${item.title}</div>
+          <div class="text-[11px] text-text-muted line-clamp-1 font-light leading-relaxed">${item.description || item.content}</div>
         </div>
       </a>
     `).join('');
