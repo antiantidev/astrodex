@@ -10,7 +10,7 @@ export async function GET() {
         const path = doc.id.replace(/\\/g, '/');
         const parts = path.split('/');
         const project = parts[0];
-        const version = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0.1');
+        const version = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0');
         
         const slug = parts.length >= 3 
             ? parts.slice(2).join('/').replace(/\.(md|mdx)$/, '')
@@ -21,7 +21,7 @@ export async function GET() {
             description: doc.data.description,
             project: project,
             version: version,
-            href: `${baseUrl}/docs/${project}/${version}/${slug}`,
+            href: `${baseUrl}/docs/${project}/${version}/${slug}/`,
             content: doc.body
         };
     });

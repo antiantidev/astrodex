@@ -19,25 +19,25 @@ const versions = [...new Set(projectAllDocs.map(d => {
     if (parts.length >= 3 && parts[1].startsWith('v')) {
         return parts[1];
     }
-    return String(d.data.version || 'v1.0.1');
+    return String(d.data.version || 'v1.0');
 }))].sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
 
 const currentVersion = docs[0] ? (() => {
     const path = docs[0].id.replace(/\\/g, '/');
     const parts = path.split('/');
-    return (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (docs[0].data.version || 'v1.0.1');
-})() : 'v1.0.1';
+    return (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (docs[0].data.version || 'v1.0');
+})() : 'v1.0';
 
 const firstDocOfVersion = [...docs].sort((a, b) => (a.data.order || 0) - (b.data.order || 0))[0];
 
 const getDocHref = (doc: any) => {
     const path = doc.id.replace(/\\/g, '/');
     const parts = path.split('/');
-    const v = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0.1');
+    const v = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0');
     const s = parts.length >= 3 
       ? parts.slice(2).join('/').replace(/\.(md|mdx)$/, '')
       : parts[parts.length - 1].replace(/\.(md|mdx)$/, '');
-	return `/docs/${project}/${v}/${s}`;
+	return `/docs/${project}/${v}/${s}/`;
 };
 
 // Pre-calculate the first document for each version to avoid intermediate redirect pages
@@ -46,7 +46,7 @@ versions.forEach(ver => {
     const docsInVer = projectAllDocs.filter(d => {
         const path = d.id.replace(/\\/g, '/');
         const parts = path.split('/');
-        const docVersion = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (d.data.version || 'v1.0.1');
+        const docVersion = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (d.data.version || 'v1.0');
         return docVersion === ver && !path.endsWith('project.metadata.md');
     }).sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
 

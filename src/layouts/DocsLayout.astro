@@ -37,13 +37,41 @@ const projectDocs = allDocs
     const path = doc.id.replace(/\\/g, '/');
     const parts = path.split('/');
     const docProject = parts[0];
-    const docVersion = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0.1');
+    const docVersion = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0');
     
     return docProject === project && 
            String(docVersion) === String(version) && 
            !path.endsWith('project.metadata.md');
   })
-  .sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
+  .sort((a, b) => {
+    const pathA = a.id.replace(/\\/g, '/').split('/');
+    const pathB = b.id.replace(/\\/g, '/').split('/');
+    
+    const restA = pathA.slice(2);
+    const restB = pathB.slice(2);
+    
+    // 1. Root items first (depth 1)
+    const isRootA = restA.length === 1;
+    const isRootB = restB.length === 1;
+    
+    if (isRootA && !isRootB) return -1;
+    if (!isRootA && isRootB) return 1;
+    
+    // 2. If both are in subfolders, sort by folder name
+    if (!isRootA && !isRootB) {
+        if (restA[0] !== restB[0]) {
+            return restA[0].localeCompare(restB[0]);
+        }
+    }
+    
+    // 3. Sort by order
+    const orderA = a.data.order || 0;
+    const orderB = b.data.order || 0;
+    if (orderA !== orderB) return orderA - orderB;
+    
+    // 4. Finally sort by title or id if order is the same
+    return a.id.localeCompare(b.id);
+  });
 
 const currentIndex = projectDocs.findIndex((d) => d.slug === currentSlug || (!currentSlug && d.id === projectDocs[0]?.id));
 let prevDoc = currentIndex > 0 ? projectDocs[currentIndex - 1] : null;
@@ -63,13 +91,13 @@ const getDocLink = (doc: any) => {
   const path = doc.id.replace(/\\/g, '/');
   const parts = path.split('/');
   const p = parts[0];
-  const v = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0.1');
+  const v = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (doc.data.version || 'v1.0');
   
   const s = parts.length >= 3 
     ? parts.slice(2).join('/').replace(/\.(md|mdx)$/, '')
     : parts[parts.length - 1].replace(/\.(md|mdx)$/, '');
 
-  return `${baseUrl}/docs/${p}/${v}/${s}`;
+  return `${baseUrl}/docs/${p}/${v}/${s}/`;
 };
 ---
 
