@@ -15,7 +15,7 @@ Launching your own premium documentation hub is simple. Follow these steps to ge
 
 The fastest way to start is by using the **GitHub Template** feature.
 
-1.  Visit the [Astrodex Repository](https://github.com/antiantidev/crefinity-doc).
+1.  Visit the [Astrodex Repository](https://github.com/antiantidev/astrodex).
 2.  Click the **"Use this template"** button.
 3.  Clone your new repository to your local machine:
     ```bash

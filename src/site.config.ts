@@ -9,7 +9,7 @@ export const SITE_CONFIG = {
 
   // Social & External Links
   links: {
-    github: "https://github.com/antiantidev/crefinity-doc",
+    github: "https://github.com/antiantidev/astrodex",
     twitter: "https://twitter.com/your-handle",
     discord: "https://discord.gg/your-invite",
     sponsor: "https://buymeacoffee.com/chokernguyen",

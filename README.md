@@ -2,7 +2,7 @@
 
 **Astrodex** is a high-performance, monochromatic documentation engine built for developers who value precision, speed, and absolute clarity. Engineered with **Astro 5.x** and **Tailwind CSS v4**, it provides a rock-solid foundation for building professional documentation hubs—from simple API guides to complex multi-project ecosystems.
 
-![Astrodex Preview](https://raw.githubusercontent.com/antiantidev/crefinity-doc/main/public/favicon.svg)
+![Astrodex Preview](https://raw.githubusercontent.com/antiantidev/astrodex/main/public/favicon.svg)
 
 ## ✨ Key Features
 

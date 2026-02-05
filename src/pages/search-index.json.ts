@@ -2,6 +2,7 @@ import { getCollection } from 'astro:content';
 
 export async function GET() {
   const docs = await getCollection('docs');
+  const baseUrl = import.meta.env.BASE_URL;
   
   const docsIndex = docs
     .filter(d => !d.id.includes('project.metadata.md'))
@@ -20,7 +21,7 @@ export async function GET() {
             description: doc.data.description,
             project: project,
             version: version,
-            href: `/docs/${project}/${version}/${slug}`,
+            href: `${baseUrl}docs/${project}/${version}/${slug}`,
             content: doc.body
         };
     });

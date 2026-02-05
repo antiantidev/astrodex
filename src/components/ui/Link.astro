@@ -1,0 +1,28 @@
+---
+interface Props {
+  href: string;
+  class?: string;
+  id?: string;
+  target?: string;
+  rel?: string;
+  title?: string;
+  [key: string]: any;
+}
+
+const { href, class: className, ...rest } = Astro.props;
+
+// Get the base URL from Astro config
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+// Process the href
+let finalHref = href;
+
+// Only process internal links (starting with /)
+if (href.startsWith("/")) {
+  finalHref = `${baseUrl}${href}`;
+}
+---
+
+<a href={finalHref} class={className} {...rest}>
+  <slot />
+</a>

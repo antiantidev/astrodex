@@ -1,8 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { SITE_CONFIG } from '../site.config';
-
-const baseUrl = import.meta.env.BASE_URL;
+import { getRelativeUrl } from '../utils/url';
 ---
 
 <Layout title={`Privacy Policy | ${SITE_CONFIG.brand.name}`} description={`Our commitment to your privacy and data ownership in the ${SITE_CONFIG.brand.name} ecosystem.`}>
@@ -13,7 +12,7 @@ const baseUrl = import.meta.env.BASE_URL;
     <div class="container mx-auto px-6 relative z-10">
       <div class="max-w-3xl">
         <nav class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-text-dim mb-12">
-            <a href={baseUrl} class="hover:text-white transition-colors">Home</a>
+            <a href={getRelativeUrl("/")} class="hover:text-white transition-colors">Home</a>
             <span class="opacity-20">/</span>
             <span class="text-white">Privacy</span>
         </nav>

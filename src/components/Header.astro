@@ -1,12 +1,13 @@
 ---
 import Search from "./Search.astro";
+import Link from "./ui/Link.astro";
 import { SITE_CONFIG } from "../site.config";
 
 const { pathname } = Astro.url;
 const normalizedPath = pathname.replace(/\/$/, "");
 
-const baseUrl = import.meta.env.BASE_URL;
 const navItems = SITE_CONFIG.navigation;
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 const socialLinks = [
   {
@@ -29,7 +30,7 @@ const socialLinks = [
   >
     <!-- Logo Section -->
     <div class="flex items-center">
-      <a href={baseUrl} class="group flex items-center gap-2 md:gap-3">
+      <Link href="/" class="group flex items-center gap-2 md:gap-3">
         <div
           class="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:border-white group-hover:scale-110 transition-all duration-500"
         >
@@ -49,7 +50,7 @@ const socialLinks = [
             >{SITE_CONFIG.brand.tagline}</span
           >
         </div>
-      </a>
+      </Link>
     </div>
 
     <!-- Navigation (Centered Pill) -->
@@ -63,12 +64,12 @@ const socialLinks = [
             normalizedPath === itemHref ||
             (item.href !== "/" && normalizedPath.startsWith(itemHref));
           return (
-            <a
-              href={itemHref}
+            <Link
+              href={item.href}
               class={`nav-link-desktop ${isActive ? "active" : ""}`}
             >
               <span class="relative z-10">{item.name}</span>
-            </a>
+            </Link>
           );
         })
       }
@@ -96,7 +97,7 @@ const socialLinks = [
 
       <Search />
 
-      <!-- Mobile Menu Button (Matched height with Search) -->
+      <!-- Mobile Menu Button -->
       <button
         id="header-mobile-trigger"
         class="md:hidden w-10 h-10 flex items-center justify-center text-text-muted hover:text-white bg-white/5 rounded-full border border-border-muted active:scale-95 transition-all relative z-[110]"
@@ -125,8 +126,8 @@ const socialLinks = [
             normalizedPath === itemHref ||
             (item.href !== "/" && normalizedPath.startsWith(itemHref));
           return (
-            <a
-              href={itemHref}
+            <Link
+              href={item.href}
               class={`nav-link-mobile ${isActive ? "active" : ""}`}
             >
               <span class="text-lg font-black uppercase tracking-widest">
@@ -135,7 +136,7 @@ const socialLinks = [
               <i
                 class={`fa-solid ${isActive ? "fa-chevron-left" : "fa-chevron-right"} text-xs`}
               />
-            </a>
+            </Link>
           );
         })
       }
@@ -189,7 +190,6 @@ const socialLinks = [
         menu.classList.add("translate-x-full");
         icon.classList.replace("fa-xmark", "fa-bars-staggered");
         document.body.style.overflow = "";
-        isOpen = false;
       });
     });
   }
@@ -199,7 +199,6 @@ const socialLinks = [
 </script>
 
 <style>
-  /* Hiệu ứng glassmorphism cho menu di động */
   #header-mobile-menu {
     background-image: radial-gradient(
       circle at 0% 0%,
