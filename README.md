@@ -1,4 +1,4 @@
-# 🌌 Astrodex | Enterprise-Grade Multi-Project Documentation Engine
+# Astrodex | Enterprise-Grade Multi-Project Documentation Engine
 
 **Astrodex** is an elite, monochromatic documentation framework engineered for developers who demand high-performance technical infrastructure. Built on **Astro 5.x** and **Tailwind CSS v4**, it provides a "Product-Level" UI for hosting complex documentation ecosystems with absolute speed, precision, and zero maintenance overhead.
 
