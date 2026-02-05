@@ -96,4 +96,7 @@ Licensed under the [MIT License](LICENSE).
 ---
 
 **Built with absolute focus by [Antiantidev](https://github.com/antiantidev).**  
+
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Support%20the%20Project-yellow?style=for-the-badge&logo=buy-me-a-coffee)](https://www.buymeacoffee.com/chokernguyen)
+
 *If this engine powers your docs, consider giving it a ⭐.*
