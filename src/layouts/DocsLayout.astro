@@ -29,7 +29,7 @@ const projectMetadata = allDocs.find((d) => {
 
 const contributorsList = projectMetadata?.data?.contributors || [];
 
-const baseUrl = import.meta.env.BASE_URL;
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 // 2. Lấy danh sách bài viết
 const projectDocs = allDocs
@@ -69,7 +69,7 @@ const getDocLink = (doc: any) => {
     ? parts.slice(2).join('/').replace(/\.(md|mdx)$/, '')
     : parts[parts.length - 1].replace(/\.(md|mdx)$/, '');
 
-  return `${baseUrl}docs/${p}/${v}/${s}`;
+  return `${baseUrl}/docs/${p}/${v}/${s}`;
 };
 ---
 

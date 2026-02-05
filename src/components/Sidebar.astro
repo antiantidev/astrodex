@@ -40,7 +40,29 @@ const getDocHref = (doc: any) => {
 	return `/docs/${project}/${v}/${s}`;
 };
 
-const getVersionHref = (ver: string) => `/docs/${project}/${ver}`;
+// Pre-calculate the first document for each version to avoid intermediate redirect pages
+const versionFirstDocMap: Record<string, string> = {};
+versions.forEach(ver => {
+    const docsInVer = projectAllDocs.filter(d => {
+        const path = d.id.replace(/\\/g, '/');
+        const parts = path.split('/');
+        const docVersion = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (d.data.version || 'v1.0.1');
+        return docVersion === ver && !path.endsWith('project.metadata.md');
+    }).sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
+
+    if (docsInVer.length > 0) {
+        const firstDoc = docsInVer[0];
+        const parts = firstDoc.id.replace(/\\/g, '/').split('/');
+        const slug = parts.length >= 3 
+            ? parts.slice(2).join('/').replace(/\.(md|mdx)$/, '')
+            : parts[parts.length - 1].replace(/\.(md|mdx)$/, '');
+        versionFirstDocMap[ver] = `/docs/${project}/${ver}/${slug}`;
+    } else {
+        versionFirstDocMap[ver] = `/docs/${project}/${ver}`; // Fallback
+    }
+});
+
+const getVersionHref = (ver: string) => versionFirstDocMap[ver];
 
 // --- Advanced Grouping Logic ---
 const sidebarGroups: { id: string; name: string | null; items: any[]; hasActive: boolean }[] = [];
@@ -304,7 +326,7 @@ Object.keys(groupsMap).forEach(groupName => {
   }
   
   .sidebar-group[data-state="open"] .sidebar-group-content {
-    max-height: 2000px;
+    max-height: 2000px; /* Arbitrary large value */
     opacity: 1;
     margin-bottom: 1rem;
   }

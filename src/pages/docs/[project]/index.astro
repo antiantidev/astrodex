@@ -57,15 +57,38 @@ const description =
   projectMetadata?.data?.description ||
   `Explore documentation for ${projectName}.`;
 
+// Pre-calculate the first document for each version to avoid intermediate redirect pages
+const versionFirstDocMap: Record<string, string> = {};
+versions.forEach(ver => {
+    const docsInVer = versionDocs.filter(d => {
+        const path = d.id.replace(/\\/g, '/');
+        const parts = path.split('/');
+        const docProject = parts[0];
+        const docVersion = (parts.length >= 3 && parts[1].startsWith('v')) ? parts[1] : (d.data.version || 'v1.0.1');
+        return docProject === project && docVersion === ver;
+    }).sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
+
+    if (docsInVer.length > 0) {
+        const firstDoc = docsInVer[0];
+        const parts = firstDoc.id.replace(/\\/g, '/').split('/');
+        const slug = parts.length >= 3 
+            ? parts.slice(2).join('/').replace(/\.(md|mdx)$/, '')
+            : parts[parts.length - 1].replace(/\.(md|mdx)$/, '');
+        versionFirstDocMap[ver] = `/docs/${project}/${ver}/${slug}`;
+    } else {
+        versionFirstDocMap[ver] = `/docs/${project}/${ver}`; // Fallback
+    }
+});
+
 const getFirstDocHref = (ver: string) => {
-  return `/docs/${project}/${ver}`;
+  return versionFirstDocMap[ver];
 };
 ---
 
 <Layout title={`${projectName} - Project Hub`} description={description}>
   <div class="pt-32 pb-24 border-b border-border-subtle">
     <div class="container mx-auto px-6">
-      <nav class="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-text-dim mb-8">
+      <nav class="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-text-dim mb-8">
         <Link href="/" class="hover:text-text-main transition-colors">Home</Link>
         <span class="text-border-muted">/</span>
         <Link href="/docs" class="hover:text-text-main transition-colors">Ecosystem</Link>
