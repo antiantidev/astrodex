@@ -4,7 +4,7 @@ description: "Utilizing the advanced discovery tools in Astrodex: Sidebar filter
 project: "astrodex-base"
 version: "v1.0.1"
 status: "stable"
-order: 3
+order: 4
 ---
 
 # Navigation & Discovery

@@ -62,11 +62,11 @@ Modify the `@theme` layer in `src/styles/global.css` to adjust the monochromatic
 Since Astrodex generates a 100% static build, it can be hosted on any edge network for **zero cost**.
 
 ### GitHub Pages (Automated)
-We provide a pre-configured CI/CD workflow. Simply enable **GitHub Actions** in your settings, and every push to `main` will trigger a global deployment.
+We provide a pre-configured CI/CD workflow. For detailed setup instructions, see our [GitHub Pages Deployment](/docs/astrodex-base/v1.0.1/getting-started/github-pages/) guide.
 
 ### Vercel / Netlify
 Connect your repository and ensure the build command is `npm run build` and the output directory is `dist/`.
 
 ---
 
-> **Next Phase:** Master the [Project Structure](/docs/astrodex-base/v1.0.1/getting-started/structure/) to organize your content efficiently.
+> **Next Phase:** Learn how to automate your deployments in the [GitHub Pages Deployment](/docs/astrodex-base/v1.0.1/getting-started/github-pages/) guide.

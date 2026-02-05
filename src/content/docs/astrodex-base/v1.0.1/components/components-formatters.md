@@ -4,7 +4,7 @@ description: "Enhancing Markdown with Admonitions, Mermaid diagrams, and premium
 project: "astrodex-base"
 version: "v1.0.1"
 status: "stable"
-order: 7
+order: 8
 ---
 
 # Technical Formatters

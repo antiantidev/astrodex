@@ -4,7 +4,7 @@ description: "Technical specifications for article metadata and Zod-based valida
 project: "astrodex-base"
 version: "v1.0.1"
 status: "stable"
-order: 4
+order: 5
 ---
 
 # Frontmatter Reference

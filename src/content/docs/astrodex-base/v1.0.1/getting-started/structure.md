@@ -4,7 +4,7 @@ description: "Understanding the folder-based routing and content organization of
 project: "astrodex-base"
 version: "v1.0.1"
 status: "stable"
-order: 2
+order: 3
 ---
 
 # Project Architecture

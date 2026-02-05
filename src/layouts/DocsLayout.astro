@@ -32,7 +32,7 @@ const contributorsList = projectMetadata?.data?.contributors || [];
 const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 // 2. Lấy danh sách bài viết
-const projectDocs = allDocs
+const rawProjectDocs = allDocs
   .filter((doc) => {
     const path = doc.id.replace(/\\/g, '/');
     const parts = path.split('/');
@@ -42,34 +42,42 @@ const projectDocs = allDocs
     return docProject === project && 
            String(docVersion) === String(version) && 
            !path.endsWith('project.metadata.md');
-  })
-  .sort((a, b) => {
+  });
+
+// Pre-calculate group weights (minimum order in each folder)
+const groupWeights: Record<string, number> = {};
+rawProjectDocs.forEach(doc => {
+    const parts = doc.id.replace(/\\/g, '/').split('/');
+    const rest = parts.slice(2);
+    const groupName = rest.length > 1 ? rest[0] : '_root';
+    const order = doc.data.order || 0;
+    
+    if (groupWeights[groupName] === undefined || order < groupWeights[groupName]) {
+        groupWeights[groupName] = order;
+    }
+});
+
+const projectDocs = rawProjectDocs.sort((a, b) => {
     const pathA = a.id.replace(/\\/g, '/').split('/');
     const pathB = b.id.replace(/\\/g, '/').split('/');
     
     const restA = pathA.slice(2);
     const restB = pathB.slice(2);
     
-    // 1. Root items first (depth 1)
-    const isRootA = restA.length === 1;
-    const isRootB = restB.length === 1;
-    
-    if (isRootA && !isRootB) return -1;
-    if (!isRootA && isRootB) return 1;
-    
-    // 2. If both are in subfolders, sort by folder name
-    if (!isRootA && !isRootB) {
-        if (restA[0] !== restB[0]) {
-            return restA[0].localeCompare(restB[0]);
-        }
+    const groupA = restA.length > 1 ? restA[0] : '_root';
+    const groupB = restB.length > 1 ? restB[0] : '_root';
+
+    // 1. Sort by group weight first
+    if (groupA !== groupB) {
+        return (groupWeights[groupA] || 0) - (groupWeights[groupB] || 0);
     }
     
-    // 3. Sort by order
+    // 2. If in the same group, sort by order
     const orderA = a.data.order || 0;
     const orderB = b.data.order || 0;
     if (orderA !== orderB) return orderA - orderB;
     
-    // 4. Finally sort by title or id if order is the same
+    // 3. Finally sort by title
     return a.id.localeCompare(b.id);
   });
 

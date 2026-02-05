@@ -4,7 +4,7 @@ description: "Customizing the monochromatic home page and modular components."
 project: "astrodex-base"
 version: "v1.0.1"
 status: "stable"
-order: 6
+order: 7
 ---
 
 # Landing Page Control

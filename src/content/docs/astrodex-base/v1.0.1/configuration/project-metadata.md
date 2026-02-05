@@ -4,7 +4,7 @@ description: "Defining global project metadata and the Ecosystem gallery presenc
 project: "astrodex-base"
 version: "v1.0.1"
 status: "stable"
-order: 5
+order: 6
 ---
 
 # Project Identity
