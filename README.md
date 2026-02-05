@@ -1,71 +1,73 @@
-# 🌌 Astrodex | Premium Documentation Starter Kit
+# 🌌 Astrodex | Elite Multi-Project Documentation Engine
 
-**Astrodex** is a high-performance, monochromatic documentation engine built for developers who value precision, speed, and absolute clarity. Engineered with **Astro 5.x** and **Tailwind CSS v4**, it provides a rock-solid foundation for building professional documentation hubs—from simple API guides to complex multi-project ecosystems.
+**Astrodex** is a high-performance, monochromatic documentation framework engineered for developers who demand technical precision and absolute speed. Built on **Astro 5.x** and **Tailwind CSS v4**, it provides a "Premium-Dark" foundation for hosting unlimited projects and versions in one unified, SEO-optimized hub.
 
-![Astrodex Preview](https://raw.githubusercontent.com/antiantidev/astrodex/main/public/favicon.svg)
+[![Lighthouse Score](https://img.shields.io/badge/Lighthouse-100%2F100-brightgreen?style=for-the-badge&logo=googlechrome)](https://pagespeed.web.dev/)
+[![Built with Astro](https://img.shields.io/badge/Built%20with-Astro%205.x-BC52EE?style=for-the-badge&logo=astro)](https://astro.build)
+[![Tailwind CSS v4](https://img.shields.io/badge/Styled%20with-Tailwind%20v4-38B2AC?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com)
 
-## ✨ Key Features
+## ⚡ Technical Edge
 
-- 🚀 **Extreme Performance:** 100/100 Lighthouse scores. Zero-JS by default for content pages.
-- 🎨 **Obsidian & Silver Theme:** A sophisticated, dark-mode design system using Tailwind CSS v4.
-- 📂 **Multi-Tenancy:** Host multiple independent projects (API, CLI, UI) in one unified codebase.
-- 🔢 **Native Versioning:** Full support for parallel versions (v1.0, v2.0, latest) with automatic routing.
-- 🔍 **Advanced Navigation:** Real-time sidebar filtering, folder-based grouping, and state persistence.
-- ⌨️ **Command Palette:** Site-wide search accessible via `Ctrl+K`.
-- 📝 **Markdown & MDX:** Write content using the tools you love.
+- 🚀 **Extreme Performance:** Near-perfect Lighthouse scores. Zero-JS by default ensures content is delivered instantly to the global edge.
+- 📂 **Multi-Project Orchestration:** Host independent ecosystems (e.g., Core API, CLI, SDKs) within a single unified deployment.
+- 🔢 **Native Versioning:** Full support for parallel versions (v1.0, v2.0, legacy) with automatic routing and version switchers.
+- 🔍 **Advanced Discovery:** Real-time sidebar filtering, stateful folder-based grouping, and site-wide `Ctrl+K` command palette.
+- 🎨 **Obsidian Design Language:** A sophisticated monochromatic aesthetic using Tailwind CSS v4 variables for effortless rebranding.
+- 🛡️ **Zod-Validated Content:** Strict metadata validation ensures data integrity and prevents broken links at build time.
+- 📊 **Technical Formatters:** Native support for Mermaid diagrams, premium code blocks with Shiki, and smart image lightboxes.
 
-## 🚀 Quick Start
+## 🚀 Deployment Pipeline
 
-### 1. Use the Template
-Click the **"Use this template"** button on GitHub to create your own repository.
+### 1. Initialize Instance
+Create your private or public repository using the **GitHub Template** feature.
 
-### 2. Local Installation
+### 2. Local Setup
 ```bash
-git clone https://github.com/YOUR_USERNAME/your-docs-repo.git
-cd your-docs-repo
+git clone https://github.com/YOUR_USER/your-docs.git
+cd your-docs
 npm install
 ```
 
-### 3. Start Development
+### 3. Development Runtime
 ```bash
 npm run dev
 ```
-Visit `http://localhost:4321` to see your hub live.
+Open `http://localhost:4321` to view your hub in real-time.
 
-## 🛠️ Customization
+## ⚙️ Configuration Matrix
 
-Astrodex is designed to be personalized in minutes:
+Astrodex is centralized for maximum control:
 
-1.  **Global Config:** Edit `src/site.config.ts` to update your brand name, logo, social links, and navigation.
-2.  **Visuals:** Modify the `@theme` block in `src/styles/global.css` to change colors and typography.
-3.  **Content:** Add your projects and articles in `src/content/docs/`. Follow the `project/version/article` hierarchy.
+1.  **Identity:** Modify `src/site.config.ts` to define your brand name, logo, social links, and navigation hierarchy.
+2.  **Branding:** Adjust the `@theme` variables in `src/styles/global.css` to transform the monochromatic palette.
+3.  **Content:** Organize your Markdown/MDX articles in `src/content/docs/[project]/[version]/`. Every project requires a `project.metadata.md` manifest at its root.
 
-## 📁 Project Structure
+## 📁 Repository Architecture
 
 ```text
 src/
-├── components/     # Modular UI components
-├── content/        # Markdown/MDX content (The source of truth)
-│   └── docs/       # Multi-project documentation
-├── layouts/        # Page structures (Layout, DocsLayout)
-├── pages/          # Routing & Special pages
-├── styles/         # Tailwind v4 & Global CSS
-└── site.config.ts  # Central configuration (The control center)
+├── components/     # High-performance UI components
+├── content/        # Markdown/MDX source files (Zod-validated)
+│   └── docs/       # Multi-project documentation hierarchy
+├── layouts/        # Page orchestrators (DocsLayout, Layout)
+├── pages/          # Dynamic routing & search index
+├── styles/         # Tailwind v4 core & monochromatic theme
+└── site.config.ts  # The Hub Control Center
 ```
 
-## 🌐 Deployment
+## 🌐 Global Hosting
 
-Deploy to the Edge for free in seconds:
+Astrodex generates a 100% static build, making it compatible with any modern edge provider for **Zero Cost**:
 
-- **Vercel:** Optimized out-of-the-box support.
-- **Netlify:** Automatic detection and deployment.
-- **GH Pages:** GitHub Actions workflow included.
+- **GitHub Pages:** Pre-configured CI/CD workflow included (`.github/workflows/deploy.yml`).
+- **Vercel:** Native Astro 5.x support with global edge distribution.
+- **Netlify:** Automatic build detection and instant deployment.
 
-## 📄 License
+## 📜 License
 
 Astrodex is open-source software licensed under the [MIT License](LICENSE).
 
 ---
 
-**Built with Absolute Focus by [Astrodex Team](https://github.com/antiantidev).**
-If you find this useful, consider [Sponsoring](https://buymeacoffee.com/chokernguyen) the project.
+**Built for the Absolute Edge by [Antiantidev](https://github.com/antiantidev).**
+*If this engine powers your documentation, consider giving it a ⭐ on GitHub.*
